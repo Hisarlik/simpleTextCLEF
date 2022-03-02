@@ -96,9 +96,6 @@ class CharLengthRatio(Feature):
 
     def calculate_ratio(self, simple_text, original_text):
 
-        print(simple_text)
-        print(original_text)
-
         return round(ControlDivisionByZero(
                                             len(simple_text),
                                             len(original_text)), 2)
