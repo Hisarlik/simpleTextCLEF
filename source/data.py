@@ -91,10 +91,10 @@ class SimplificationDataModule(LightningDataModule):
                                             fn_kwargs=kwargs)
             logger.info(f"Feature: {feature} calculated.")
 
-        return self.dataset.map(lambda example: {'original_text_preprocessed':
-                                                     example['original_text_preprocessed'] +
-                                                     example['original_text']})
-
+        self.dataset = self.dataset.map(lambda example: {'original_text_preprocessed':
+                                                             "simplify: " +
+                                                             example['original_text_preprocessed'] +
+                                                             example['original_text']})
 
     def tokenize_dataset(self):
 
@@ -105,7 +105,7 @@ class SimplificationDataModule(LightningDataModule):
             )
 
         columns = ["input_ids", "labels", "attention_mask", "target_mask"]
-        self.dataset.set_format(type="torch", columns=columns)
+        self.dataset.set_format(type="torch", columns=columns, output_all_columns=True)
 
         for split in self.dataset.keys():
             self.dataset[split] = self.dataset[split].map(
@@ -113,18 +113,19 @@ class SimplificationDataModule(LightningDataModule):
             )
         return self.dataset
 
-
     def _tokenize_batch(self, batch):
-        input_encodings = self.tokenizer(batch["original_text"], max_length=256,
+
+        input_encodings = self.tokenizer(batch["original_text_preprocessed"], max_length=256,
                                          truncation=True, padding="max_length")
 
         with self.tokenizer.as_target_tokenizer():
             target_encodings = self.tokenizer(batch["simple_text"], max_length=256,
                                               truncation=True, padding="max_length")
 
-
-        return {"input_ids": input_encodings["input_ids"],
+        return {"original_text": batch["original_text"],
+                "input_ids": input_encodings["input_ids"],
                 "attention_mask": input_encodings["attention_mask"],
+                "simple_text": batch["simple_text"],
                 "labels": target_encodings["input_ids"],
                 "target_mask": target_encodings["attention_mask"]}
 
@@ -136,4 +137,3 @@ class SimplificationDataModule(LightningDataModule):
         labels[labels == self.tokenizer.pad_token_id] = -100
         batch["labels"] = labels
         return batch
-

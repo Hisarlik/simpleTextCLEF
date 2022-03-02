@@ -13,7 +13,8 @@ pytorch_lightning
 python_Levenshtein==0.12.0
 spacy
 sentencepiece
-
+easse@git+git://github.com/feralvam/easse.git@8f62a807cce1c73771ad2c6c28a1c72e927d581a
+sacrebleu==1.5.1
 
 
 

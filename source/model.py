@@ -1,15 +1,16 @@
-from conf import DEVICE
+import os
 from utils import logging_module
 import pytorch_lightning as pl
 import torch
-from torch.utils.data import Dataset, DataLoader
+from easse.sari import corpus_sari
 from transformers import (
     AdamW,
+    AutoTokenizer,
     T5ForConditionalGeneration,
     T5TokenizerFast,
     get_linear_schedule_with_warmup, AutoConfig, AutoModel
 )
-import os
+
 
 logger = logging_module.get_logger(__name__)
 
@@ -17,26 +18,25 @@ logger = logging_module.get_logger(__name__)
 class LoggingCallback(pl.Callback):
     def on_validation_end(self, trainer, pl_module):
         logger.info("***** Validation results *****")
-        if pl_module.is_logger():
-            metrics = trainer.callback_metrics
-            # Log results
-            for key in sorted(metrics):
-                if key not in ["log", "progress_bar"]:
-                    logger.info("{} = {}\n".format(key, str(metrics[key])))
+
+        metrics = trainer.callback_metrics
+        # Log results
+        for key in sorted(metrics):
+            if key not in ["log", "progress_bar"]:
+                logger.info("{} = {}\n".format(key, str(metrics[key])))
 
     def on_test_end(self, trainer, pl_module):
         logger.info("***** Test results *****")
 
-        if pl_module.is_logger():
-            metrics = trainer.callback_metrics
+        metrics = trainer.callback_metrics
 
-            # Log and save results to file
-            output_test_results_file = os.path.join(pl_module.hparams.output_dir, "test_results.txt")
-            with open(output_test_results_file, "w") as writer:
-                for key in sorted(metrics):
-                    if key not in ["log", "progress_bar"]:
-                        logger.info("{} = {}\n".format(key, str(metrics[key])))
-                        writer.write("{} = {}\n".format(key, str(metrics[key])))
+        # Log and save results to file
+        output_test_results_file = os.path.join(pl_module.hparams.output_dir, "test_results.txt")
+        with open(output_test_results_file, "w") as writer:
+            for key in sorted(metrics):
+                if key not in ["log", "progress_bar"]:
+                    logger.info("{} = {}\n".format(key, str(metrics[key])))
+                    writer.write("{} = {}\n".format(key, str(metrics[key])))
 
 
 
@@ -46,10 +46,8 @@ class T5SimplificationModel(pl.LightningModule):
         super(T5SimplificationModel, self).__init__()
         self.save_hyperparameters()
         self.model = T5ForConditionalGeneration.from_pretrained(self.hparams.model_name).to(self.hparams.device)
+        self.tokenizer = AutoTokenizer.from_pretrained(self.hparams.model_name, use_fast=True)
         self.metric = None
-
-    #def is_logger(self):
-    #    return self.trainer.proc_rank <= 0
 
 
     def forward(
@@ -66,12 +64,12 @@ class T5SimplificationModel(pl.LightningModule):
 
 
     def training_step(self, batch, batch_idx):
-        labels = batch["labels"]
+
         self.opt.zero_grad()
         outputs = self(
             input_ids=batch["input_ids"],
             attention_mask=batch["attention_mask"],
-            labels=labels,
+            labels=batch["labels"],
             decoder_attention_mask=batch['target_mask'],
         )
         loss = outputs.loss
@@ -111,6 +109,30 @@ class T5SimplificationModel(pl.LightningModule):
         #lr_scheduler.step()
 
 
+    def sari_validation_step(self, batch):
+
+
+        beam_outputs = self.model.generate(
+                input_ids=batch["input_ids"],
+                attention_mask=batch["attention_mask"],
+                do_sample=False,
+                max_length=self.hparams.max_seq_length,
+                num_beams=8,
+                top_k=120,
+                top_p=0.98,
+                early_stopping=True,
+                num_return_sequences=1
+            ).to(self.device)
+
+
+        predictions = self.tokenizer.batch_decode(beam_outputs,
+                                                  skip_special_tokens=True,
+                                                  clean_up_tokenization_spaces=True)
+
+        score = corpus_sari(batch["original_text"], predictions, [batch["simple_text"]])
+        #print("Sari score: ", score)
+
+        return 1 - score / 100
 
 
 
