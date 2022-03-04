@@ -50,6 +50,17 @@ class T5SimplificationModel(pl.LightningModule):
         self.metric = None
 
 
+    def setup(self, stage=None) -> None:
+        if stage != "fit":
+            return
+        # Get dataloader by calling it - train_dataloader() is called after setup() by default
+        train_loader = self.trainer.datamodule.train_dataloader()
+
+        # Calculate total steps
+        tb_size = self.hparams.train_batch_size * max(1, self.trainer.gpus)
+        ab_size = tb_size * self.trainer.accumulate_grad_batches
+        self.total_steps = int((len(train_loader.dataset) / ab_size) * float(self.trainer.max_epochs))
+
     def forward(
         self, input_ids, attention_mask=None, decoder_input_ids=None, decoder_attention_mask=None, labels=None
     ):
@@ -65,7 +76,6 @@ class T5SimplificationModel(pl.LightningModule):
 
     def training_step(self, batch, batch_idx):
 
-        self.opt.zero_grad()
         outputs = self(
             input_ids=batch["input_ids"],
             attention_mask=batch["attention_mask"],
@@ -98,15 +108,20 @@ class T5SimplificationModel(pl.LightningModule):
                                lr=self.hparams.learning_rate,
                                eps=self.hparams.adam_epsilon)
 
-        self.opt = optimizer
-        return optimizer
+        scheduler = get_linear_schedule_with_warmup(
+            optimizer,
+            num_warmup_steps=self.hparams.warmup_steps,
+            num_training_steps=self.total_steps,
+        )
+        scheduler = {"scheduler": scheduler, "interval": "step", "frequency": 1}
+
+        return [optimizer], [scheduler]
 
     def optimizer_step(self, epoch=None, batch_idx=None, optimizer=None, optimizer_idx=None, optimizer_closure=None,
                        on_tpu=None, using_native_amp=None, using_lbfgs=None):
         optimizer.step(closure=optimizer_closure)
 
         optimizer.zero_grad()
-        #lr_scheduler.step()
 
 
     def sari_validation_step(self, batch):

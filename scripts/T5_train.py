@@ -10,6 +10,8 @@ from source.data import SimplificationDataModule
 from source.model import T5SimplificationModel, LoggingCallback
 from conf import WIKILARGE_CHUNK_DATASET, PREPROCESSED_DIR, OUTPUT_DIR, DEVICE
 import pytorch_lightning as pl
+from pytorch_lightning import seed_everything
+
 logger = logging_module.get_logger(__name__)
 
 if __name__ == "__main__":
@@ -31,7 +33,7 @@ if __name__ == "__main__":
         fp_16=False,
         opt_level='O1',
         max_grad_norm=1.0,
-        seed=12,
+        seed=42,
         nb_sanity_val_steps=0,
         train_sample_size=1,
         valid_sample_size=1,
@@ -76,12 +78,11 @@ if __name__ == "__main__":
         progress_bar_refresh_rate=1,
     )
 
+    seed_everything(model_hyperparameters['seed'])
     dm = SimplificationDataModule('t5-small', WIKILARGE_CHUNK_DATASET, features)
     dm.load_data()
     dm.setup("fit")
 
-
     model = T5SimplificationModel(**model_hyperparameters)
-
     trainer = pl.Trainer(**train_params)
     trainer.fit(model, datamodule=dm)
