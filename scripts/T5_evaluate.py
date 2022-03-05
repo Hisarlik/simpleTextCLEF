@@ -12,6 +12,18 @@ from pytorch_lightning.callbacks import ModelCheckpoint
 from source.data import SimplificationDataModule
 from source.model import T5SimplificationModel
 from conf import WIKILARGE_CHUNK_DATASET
+from easse.sari import corpus_sari
+from pathlib import Path
+
+
+def load_file(path):
+
+    texts=[]
+    with open(path, "r", encoding="utf8") as f:
+        lines = f.readlines()
+        for line in lines:
+            texts.append(line.replace("\n",""))
+    return texts
 
 
 def evaluate(dataset, features):
@@ -27,6 +39,24 @@ def evaluate(dataset, features):
     trainer.test(model, datamodule=dm)
     print(len(model.predictions))
 
+    original_sents_paths = []
+    simple_sents_paths = []
+
+    for test_file in Path(WIKILARGE_CHUNK_DATASET).glob("*.test.complex"):
+        original_sents_paths.append(test_file)
+
+    for test_file in Path(WIKILARGE_CHUNK_DATASET).glob("*.test.simple"):
+        simple_sents_paths.append(test_file)
+
+    originals_sents = load_file(original_sents_paths[0])
+    simple_sents = load_file(simple_sents_paths[0])
+
+    print("Original", original_sents_paths)
+    print("Simple", simple_sents_paths)
+
+    print("SARI", corpus_sari(originals_sents,
+                              model.predictions,
+                              [simple_sents]))
 
 
 
