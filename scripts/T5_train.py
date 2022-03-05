@@ -14,6 +14,20 @@ from pytorch_lightning import seed_everything
 
 logger = logging_module.get_logger(__name__)
 
+
+
+def train(train_params, model_hyperparameters, features):
+
+    seed_everything(model_hyperparameters['seed'])
+    dm = SimplificationDataModule('t5-small', WIKILARGE_CHUNK_DATASET, features)
+    dm.load_data()
+    dm.setup("fit")
+
+    model = T5SimplificationModel(**model_hyperparameters)
+    trainer = pl.Trainer(**train_params)
+    trainer.fit(model, datamodule=dm)
+
+
 if __name__ == "__main__":
 
 
@@ -53,11 +67,7 @@ if __name__ == "__main__":
         'WordRankRatio': {'target_ratio': 0.8}
     }
 
-    conf = {
-                "model_hyperparameters": model_hyperparameters,
-                "features": features
 
-    }
 
     checkpoint_callback = pl.callbacks.ModelCheckpoint(
         dirpath=OUTPUT_DIR,
@@ -78,11 +88,12 @@ if __name__ == "__main__":
         progress_bar_refresh_rate=1,
     )
 
-    seed_everything(model_hyperparameters['seed'])
-    dm = SimplificationDataModule('t5-small', WIKILARGE_CHUNK_DATASET, features)
-    dm.load_data()
-    dm.setup("fit")
+    conf = {
+                "model_hyperparameters": model_hyperparameters,
+                "features": features,
+                "train_params": train_params
 
-    model = T5SimplificationModel(**model_hyperparameters)
-    trainer = pl.Trainer(**train_params)
-    trainer.fit(model, datamodule=dm)
+    }
+
+    train(**conf)
+

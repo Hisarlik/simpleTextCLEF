@@ -48,6 +48,7 @@ class T5SimplificationModel(pl.LightningModule):
         self.model = T5ForConditionalGeneration.from_pretrained(self.hparams.model_name).to(self.hparams.device)
         self.tokenizer = AutoTokenizer.from_pretrained(self.hparams.model_name, use_fast=True)
         self.metric = None
+        self.predictions = []
 
 
     def setup(self, stage=None) -> None:
@@ -91,6 +92,27 @@ class T5SimplificationModel(pl.LightningModule):
         print("Val_loss", loss)
         self.log('val_loss', loss)
         return torch.tensor(loss, dtype=float)
+
+    def test_step(self,batch, batch_idx):
+
+        beam_outputs = self.model.generate(
+                input_ids=batch["input_ids"],
+                attention_mask=batch["attention_mask"],
+                do_sample=False,
+                max_length=self.hparams.max_seq_length,
+                num_beams=8,
+                top_k=120,
+                top_p=0.98,
+                early_stopping=True,
+                num_return_sequences=1
+            ).to(self.device)
+
+
+        predictions = self.tokenizer.batch_decode(beam_outputs,
+                                                  skip_special_tokens=True,
+                                                  clean_up_tokenization_spaces=True)
+        self.predictions.extend(predictions)
+        print(predictions)
 
     def configure_optimizers(self):
         no_decay = ["bias", "LayerNorm.weight"]
