@@ -47,7 +47,6 @@ class T5SimplificationModel(pl.LightningModule):
         self.save_hyperparameters()
         self.model = T5ForConditionalGeneration.from_pretrained(self.hparams.model_name).to(self.hparams.device)
         self.tokenizer = AutoTokenizer.from_pretrained(self.hparams.model_name, use_fast=True)
-        self.metric = None
         self.predictions = []
 
 
@@ -112,7 +111,6 @@ class T5SimplificationModel(pl.LightningModule):
                                                   skip_special_tokens=True,
                                                   clean_up_tokenization_spaces=True)
         self.predictions.extend(predictions)
-        print(predictions)
 
     def configure_optimizers(self):
         no_decay = ["bias", "LayerNorm.weight"]
@@ -167,7 +165,6 @@ class T5SimplificationModel(pl.LightningModule):
                                                   clean_up_tokenization_spaces=True)
 
         score = corpus_sari(batch["original_text"], predictions, [batch["simple_text"]])
-        #print("Sari score: ", score)
 
         return 1 - score / 100
 
