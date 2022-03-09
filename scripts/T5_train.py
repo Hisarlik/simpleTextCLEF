@@ -6,11 +6,11 @@ from typing import Dict
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 # -- end fix path --
 
-import torch
+
 from utils import logging_module
 from source.optimization import Experiment
-from conf import WIKILARGE_CHUNK_DATASET, PREPROCESSED_DIR, OUTPUT_DIR, DEVICE
-import pytorch_lightning as pl
+from conf import WIKILARGE_CHUNK_DATASET, PREPROCESSED_DIR, DEVICE
+
 
 logger = logging_module.get_logger(__name__)
 
@@ -45,6 +45,7 @@ if __name__ == "__main__":
 
     config = dict(
         model_name='t5-small',
+        dataset_path=WIKILARGE_CHUNK_DATASET,
         max_epochs=1,
         max_seq_length=32,
         learning_rate=3e-4,
@@ -64,8 +65,6 @@ if __name__ == "__main__":
         nb_sanity_val_steps=0,
         train_sample_size=1,
         valid_sample_size=1,
-        dataset_path=WIKILARGE_CHUNK_DATASET,
-        preprocess_dir=PREPROCESSED_DIR,
         device=DEVICE
     )
 
