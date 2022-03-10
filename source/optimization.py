@@ -8,9 +8,11 @@ from pytorch_lightning import seed_everything
 import pytorch_lightning as pl
 
 from conf import OUTPUT_DIR
+from utils import logging_module
 from source.data import SimplificationDataModule
 from source.model import T5SimplificationModel, LoggingCallback
 
+logger = logging_module.get_logger(__name__)
 
 @dataclass
 class Experiment:
@@ -20,7 +22,8 @@ class Experiment:
     features: Dict
 
     def start(self):
-        seed_everything(self.hparams['seed'])
+        logger.info(f"Init experiment. hparams: {self.hparams}. features:{self.features.keys()}")
+        seed_everything(self.hparams['seed'], workers=True)
 
         # Creating path to store the experiment
         path = self._create_experiment_id()
@@ -38,7 +41,7 @@ class Experiment:
                                       self.hparams.get("valid_batch_size")
                                       )
         dm.load_data()
-        dm.setup("fit")
+        dm.setup()
 
         # Creating T5 simplification model.
         # TODO: Modify to instantiate the model class using its name. e.g T5 -> T5SimplificationModel-

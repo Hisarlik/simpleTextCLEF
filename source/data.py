@@ -1,5 +1,6 @@
 from typing import Optional, Dict
 from pathlib import Path
+import os
 import re
 import collections
 
@@ -41,29 +42,37 @@ class SimplificationDataModule(LightningDataModule):
         self.max_seq_length = max_seq_length
         self.train_batch_size = train_batch_size
         self.eval_batch_size = eval_batch_size
-
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, use_fast=True)
 
 
     def setup(self, stage: Optional[str] = None):
         """DataModule pipeline. Load data, add and store features and then tokenize text"""
+
         path = self._get_path_from_features()
         if self._exists_preprocessed_dataset(path):
+            logger.info(f"Features calculated previously. Loading preprocessed dataset at: {path}")
             self.dataset = self._load_preprocessed_dataset(path)
         else:
+            logger.info(f"Loading dataset")
             self.dataset = self.load_data()
+
+            logger.info("Calculating features")
             self._add_features()
+
+            logger.info("Storing preprocessed dataset")
             self._store_preprocessed_dataset()
+
+        logger.info("Tokenizing dataset")
         self._tokenize_dataset()
 
     def train_dataloader(self):
-        return DataLoader(self.dataset["train"], batch_size=self.train_batch_size)
+        return DataLoader(self.dataset["train"], batch_size=self.train_batch_size, num_workers=2)
 
     def val_dataloader(self):
-        return DataLoader(self.dataset["valid"], batch_size=self.eval_batch_size)
+        return DataLoader(self.dataset["valid"], batch_size=self.eval_batch_size, num_workers=2)
 
     def test_dataloader(self):
-        return DataLoader(self.dataset["test"], batch_size=self.eval_batch_size)
+        return DataLoader(self.dataset["test"], batch_size=self.eval_batch_size, num_workers=2)
 
     def load_data(self):
         """Loading dataset into Hugging Face DatasetDict """
@@ -173,7 +182,6 @@ class SimplificationDataModule(LightningDataModule):
             for word in re.findall('[A-Z][^A-Z]*', feature):
                 if word: name += word[0]
             if not name: name = feature
-            print(name)
             preprocessed_name += name + "_"
         preprocessed_name += str(len(self.model_features))
         path = PREPROCESSED_DIR / preprocessed_name

@@ -6,20 +6,14 @@ from typing import Dict
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 # -- end fix path --
 
-
-from utils import logging_module
 from source.optimization import Experiment
-from conf import WIKILARGE_CHUNK_DATASET, PREPROCESSED_DIR, DEVICE
-
-
-logger = logging_module.get_logger(__name__)
+from conf import WIKILARGE_CHUNK_DATASET, DEVICE
 
 
 def main(model_hyperparameters: Dict,
          features: Dict
          ):
     """
-
     :param model_hyperparameters: Language model parameters. e.g. : selected model, learning rate, ...
     :param features: A Dict with simplification features e.g. : WordLengthRatio, WordRankRatio, ...
     :return:
@@ -34,7 +28,6 @@ def main(model_hyperparameters: Dict,
 
 
 if __name__ == "__main__":
-
     features = dict(
         WordLengthRatio=dict(target_ratio=0.8),
         CharLengthRatio=dict(target_ratio=0.8),

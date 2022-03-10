@@ -59,9 +59,7 @@ def evaluate(dataset, features):
                               [simple_sents]))
 
 
-
 if __name__ == "__main__":
-
 
     features_kwargs = {
         # 'WordRatioFeature': {'target_ratio': 1.05},

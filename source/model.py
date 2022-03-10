@@ -7,10 +7,8 @@ from transformers import (
     AdamW,
     AutoTokenizer,
     T5ForConditionalGeneration,
-    T5TokenizerFast,
-    get_linear_schedule_with_warmup, AutoConfig, AutoModel
+    get_linear_schedule_with_warmup
 )
-
 
 logger = logging_module.get_logger(__name__)
 
@@ -39,20 +37,20 @@ class LoggingCallback(pl.Callback):
                     writer.write("{} = {}\n".format(key, str(metrics[key])))
 
 
-
 class T5SimplificationModel(pl.LightningModule):
 
     def __init__(self, **kwarg):
+        """ Simplification Pytorch lightning module """
         super(T5SimplificationModel, self).__init__()
+
         self.save_hyperparameters()
         self.model = T5ForConditionalGeneration.from_pretrained(self.hparams.model_name).to(self.hparams.device)
         self.tokenizer = AutoTokenizer.from_pretrained(self.hparams.model_name, use_fast=True)
+
+        self.total_steps = None
         self.predictions = []
 
-
     def setup(self, stage=None) -> None:
-        if stage != "fit":
-            return
         # Get dataloader by calling it - train_dataloader() is called after setup() by default
         train_loader = self.trainer.datamodule.train_dataloader()
 
@@ -60,9 +58,10 @@ class T5SimplificationModel(pl.LightningModule):
         tb_size = self.hparams.train_batch_size * max(1, self.trainer.gpus)
         ab_size = tb_size * self.trainer.accumulate_grad_batches
         self.total_steps = int((len(train_loader.dataset) / ab_size) * float(self.trainer.max_epochs))
+        logger.debug(f"Total steps: {self.total_steps}")
 
     def forward(
-        self, input_ids, attention_mask=None, decoder_input_ids=None, decoder_attention_mask=None, labels=None
+            self, input_ids, attention_mask=None, decoder_input_ids=None, decoder_attention_mask=None, labels=None
     ):
         outputs = self.model(
             input_ids,
@@ -73,9 +72,7 @@ class T5SimplificationModel(pl.LightningModule):
         )
         return outputs
 
-
     def training_step(self, batch, batch_idx):
-
         outputs = self(
             input_ids=batch["input_ids"],
             attention_mask=batch["attention_mask"],
@@ -88,24 +85,21 @@ class T5SimplificationModel(pl.LightningModule):
 
     def validation_step(self, batch, batch_idx):
         loss = self.sari_validation_step(batch)
-        print("Val_loss", loss)
         self.log('val_loss', loss)
         return torch.tensor(loss, dtype=float)
 
-    def test_step(self,batch, batch_idx):
-
+    def test_step(self, batch, batch_idx):
         beam_outputs = self.model.generate(
-                input_ids=batch["input_ids"],
-                attention_mask=batch["attention_mask"],
-                do_sample=False,
-                max_length=self.hparams.max_seq_length,
-                num_beams=8,
-                top_k=120,
-                top_p=0.98,
-                early_stopping=True,
-                num_return_sequences=1
-            ).to(self.device)
-
+            input_ids=batch["input_ids"],
+            attention_mask=batch["attention_mask"],
+            do_sample=False,
+            max_length=self.hparams.max_seq_length,
+            num_beams=8,
+            top_k=120,
+            top_p=0.98,
+            early_stopping=True,
+            num_return_sequences=1
+        ).to(self.device)
 
         predictions = self.tokenizer.batch_decode(beam_outputs,
                                                   skip_special_tokens=True,
@@ -125,8 +119,8 @@ class T5SimplificationModel(pl.LightningModule):
             },
         ]
         optimizer = AdamW(optimizer_grouped_parameters,
-                               lr=self.hparams.learning_rate,
-                               eps=self.hparams.adam_epsilon)
+                          lr=self.hparams.learning_rate,
+                          eps=self.hparams.adam_epsilon)
 
         scheduler = get_linear_schedule_with_warmup(
             optimizer,
@@ -140,25 +134,20 @@ class T5SimplificationModel(pl.LightningModule):
     def optimizer_step(self, epoch=None, batch_idx=None, optimizer=None, optimizer_idx=None, optimizer_closure=None,
                        on_tpu=None, using_native_amp=None, using_lbfgs=None):
         optimizer.step(closure=optimizer_closure)
-
         optimizer.zero_grad()
 
-
     def sari_validation_step(self, batch):
-
-
         beam_outputs = self.model.generate(
-                input_ids=batch["input_ids"],
-                attention_mask=batch["attention_mask"],
-                do_sample=False,
-                max_length=self.hparams.max_seq_length,
-                num_beams=8,
-                top_k=120,
-                top_p=0.98,
-                early_stopping=True,
-                num_return_sequences=1
-            ).to(self.device)
-
+            input_ids=batch["input_ids"],
+            attention_mask=batch["attention_mask"],
+            do_sample=False,
+            max_length=self.hparams.max_seq_length,
+            num_beams=8,
+            top_k=120,
+            top_p=0.98,
+            early_stopping=True,
+            num_return_sequences=1
+        ).to(self.device)
 
         predictions = self.tokenizer.batch_decode(beam_outputs,
                                                   skip_special_tokens=True,
@@ -167,9 +156,3 @@ class T5SimplificationModel(pl.LightningModule):
         score = corpus_sari(batch["original_text"], predictions, [batch["simple_text"]])
 
         return 1 - score / 100
-
-
-
-
-
-
