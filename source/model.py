@@ -1,5 +1,5 @@
 import os
-from utils import logging_module
+from source.utils import logging_module
 import pytorch_lightning as pl
 import torch
 from easse.sari import corpus_sari
@@ -23,18 +23,18 @@ class LoggingCallback(pl.Callback):
             if key not in ["log", "progress_bar"]:
                 logger.info("{} = {}\n".format(key, str(metrics[key])))
 
-    def on_test_end(self, trainer, pl_module):
-        logger.info("***** Test results *****")
-
-        metrics = trainer.callback_metrics
-
-        # Log and save results to file
-        output_test_results_file = os.path.join(pl_module.hparams.output_dir, "test_results.txt")
-        with open(output_test_results_file, "w") as writer:
-            for key in sorted(metrics):
-                if key not in ["log", "progress_bar"]:
-                    logger.info("{} = {}\n".format(key, str(metrics[key])))
-                    writer.write("{} = {}\n".format(key, str(metrics[key])))
+    # def on_test_end(self, trainer, pl_module):
+    #     logger.info("***** Test results *****")
+    #
+    #     metrics = trainer.callback_metrics
+    #
+    #     # Log and save results to file
+    #     output_test_results_file = os.path.join(pl_module.hparams.output_dir, "test_results.txt")
+    #     with open(output_test_results_file, "w") as writer:
+    #         for key in sorted(metrics):
+    #             if key not in ["log", "progress_bar"]:
+    #                 logger.info("{} = {}\n".format(key, str(metrics[key])))
+    #                 writer.write("{} = {}\n".format(key, str(metrics[key])))
 
 
 class T5SimplificationModel(pl.LightningModule):

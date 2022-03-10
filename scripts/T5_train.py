@@ -7,6 +7,7 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 # -- end fix path --
 
 from source.optimization import Experiment
+from source.utils import storage
 from conf import WIKILARGE_CHUNK_DATASET, DEVICE
 
 
@@ -25,6 +26,7 @@ def main(model_hyperparameters: Dict,
     )
 
     experiment.start()
+    storage.save_experiment(experiment)
 
 
 if __name__ == "__main__":
