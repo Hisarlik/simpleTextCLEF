@@ -1,27 +1,34 @@
 import os
 import pickle
-from pathlib import Path
-from source.optimization import Experiment
+
 from conf import OUTPUT_DIR
 
 
-def save_experiment(experiment: Experiment):
-    path = experiment.experiment_path / "experiment.pickle"
+def save_object(path, experiment):
     with open(path, "wb") as f:
         pickle.dump(experiment, f)
 
 
-def load_experiment(experiment_id: str = None):
-    if experiment_id:
-        experiment_path = OUTPUT_DIR / experiment_id / "experiment.pickle"
-
-    else:
-        experiments = [path for path in OUTPUT_DIR.iterdir() if os.path.isdir(path)]
-        experiment_path = sorted(experiments, reverse=True)[0] / "experiment.pickle"
-
+def load_object(experiment_path):
     with open(experiment_path, "rb") as f:
         experiment = pickle.load(f)
 
     return experiment
 
+
+
+def load_file(path):
+    texts = []
+    with open(path, "r", encoding="utf8") as f:
+        lines = f.readlines()
+        for line in lines:
+            texts.append(line.replace("\n", ""))
+    return texts
+
+def save_file(path, texts):
+
+    with open(path, 'w', encoding="utf8") as f:
+        for line in texts:
+            f.write(line)
+            f.write('\n')
 

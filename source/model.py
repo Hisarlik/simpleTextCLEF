@@ -9,6 +9,7 @@ from transformers import (
     T5ForConditionalGeneration,
     get_linear_schedule_with_warmup
 )
+from source.utils import storage
 
 logger = logging_module.get_logger(__name__)
 
@@ -23,18 +24,15 @@ class LoggingCallback(pl.Callback):
             if key not in ["log", "progress_bar"]:
                 logger.info("{} = {}\n".format(key, str(metrics[key])))
 
-    # def on_test_end(self, trainer, pl_module):
-    #     logger.info("***** Test results *****")
-    #
-    #     metrics = trainer.callback_metrics
-    #
-    #     # Log and save results to file
-    #     output_test_results_file = os.path.join(pl_module.hparams.output_dir, "test_results.txt")
-    #     with open(output_test_results_file, "w") as writer:
-    #         for key in sorted(metrics):
-    #             if key not in ["log", "progress_bar"]:
-    #                 logger.info("{} = {}\n".format(key, str(metrics[key])))
-    #                 writer.write("{} = {}\n".format(key, str(metrics[key])))
+    def on_test_end(self, trainer, pl_module):
+        logger.info("***** Test results *****")
+        print(pl_module.hparams)
+        path = pl_module.hparams.get('experiment_path') / "test_results.txt"
+        predictions = pl_module.predictions
+        if predictions:
+            storage.save_file(path, predictions)
+
+
 
 
 class T5SimplificationModel(pl.LightningModule):

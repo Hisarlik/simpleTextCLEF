@@ -8,20 +8,12 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 from typing import Dict
 from pathlib import Path
 
-from easse.sari import corpus_sari
-
 from source.utils import storage
 from source.optimization import Experiment
 from conf import WIKILARGE_CHUNK_DATASET
+from source.optimization import ExperimentManager
 
 
-def load_file(path):
-    texts = []
-    with open(path, "r", encoding="utf8") as f:
-        lines = f.readlines()
-        for line in lines:
-            texts.append(line.replace("\n", ""))
-    return texts
 
 
 def evaluate(experiment: Experiment,
@@ -32,26 +24,9 @@ def evaluate(experiment: Experiment,
     trainer = experiment.create_trainer()
     model = experiment.load_best_model()
     trainer.test(model, datamodule=dm)
+    experiment.get_metrics()
 
 
-    original_sents_paths = []
-    simple_sents_paths = []
-
-    for test_file in Path(WIKILARGE_CHUNK_DATASET).glob("*.test.complex"):
-        original_sents_paths.append(test_file)
-
-    for test_file in Path(WIKILARGE_CHUNK_DATASET).glob("*.test.simple"):
-        simple_sents_paths.append(test_file)
-
-    originals_sents = load_file(original_sents_paths[0])
-    simple_sents = load_file(simple_sents_paths[0])
-
-    print("Original", original_sents_paths)
-    print("Simple", simple_sents_paths)
-
-    print("SARI", corpus_sari(originals_sents,
-                              model.predictions,
-                              [simple_sents]))
 
 
 if __name__ == "__main__":
@@ -65,6 +40,5 @@ if __name__ == "__main__":
 
     experiment_id = None
 
-    experiment = storage.load_experiment(experiment_id)
-    print(experiment)
+    experiment = ExperimentManager.load_experiment(experiment_id)
     evaluate(experiment, WIKILARGE_CHUNK_DATASET, features)

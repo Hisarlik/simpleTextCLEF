@@ -6,7 +6,7 @@ from typing import Dict
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 # -- end fix path --
 
-from source.optimization import Experiment
+from source.optimization import ExperimentManager
 from source.utils import storage
 from conf import WIKILARGE_CHUNK_DATASET, DEVICE
 
@@ -20,13 +20,13 @@ def main(model_hyperparameters: Dict,
     :return:
     """
 
-    experiment = Experiment(
+    experiment = ExperimentManager.create_experiment(
         model_hyperparameters,
         features
     )
 
     experiment.start()
-    storage.save_experiment(experiment)
+    ExperimentManager.save_experiment(experiment)
 
 
 if __name__ == "__main__":
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     config = dict(
         model_name='t5-small',
         dataset_path=WIKILARGE_CHUNK_DATASET,
-        number_epochs=5,
+        number_epochs=1,
         max_seq_length=32,
         learning_rate=3e-4,
         weight_decay=0.1,
