@@ -120,10 +120,9 @@ class Experiment:
         originals_sents = storage.load_file(original_sents_paths[0])
         simple_sents = storage.load_file(simple_sents_paths[0])
 
+        score = corpus_sari(originals_sents, test_results, [simple_sents])
 
-        logger.info("test SARI", corpus_sari(originals_sents,
-                                  test_results,
-                                  [simple_sents]))
+        logger.info(f"test SARI: {score}")
 
 
 class ExperimentManager:
