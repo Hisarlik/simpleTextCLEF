@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 import torch
 from pytorch_lightning import seed_everything
 import pytorch_lightning as pl
+from pytorch_lightning.callbacks import TQDMProgressBar
 
 from conf import OUTPUT_DIR
 from source.utils import logging_module
@@ -13,6 +14,15 @@ from source.data import SimplificationDataModule
 from source.model import T5SimplificationModel, LoggingCallback
 
 logger = logging_module.get_logger(__name__)
+
+
+class LitProgressBar(TQDMProgressBar):
+
+    def init_validation_tqdm(self):
+        bar = super().init_validation_tqdm()
+        bar.set_description('running validation ...')
+        return bar
+
 
 @dataclass
 class Experiment:
@@ -31,9 +41,10 @@ class Experiment:
 
         # Get the hyperparameters of the trainer and instantiate it
         trainer = self.create_trainer()
+        dataset_path = self.hparams.get('dataset_path')
 
         # Creating Pytorch Lightning DataModule
-        dm = self.create_and_setup_data_module()
+        dm = self.create_and_setup_data_module(dataset_path, self.features)
 
         # Creating T5 simplification model.
         # TODO: Modify to instantiate the model class using its name. e.g T5 -> T5SimplificationModel-
@@ -46,22 +57,21 @@ class Experiment:
         trainer = pl.Trainer(**trainer_configuration)
         return trainer
 
-    def create_and_setup_data_module(self) -> SimplificationDataModule:
+    def create_and_setup_data_module(self, dataset: Path, features: Dict) -> SimplificationDataModule:
         dm = SimplificationDataModule(self.hparams.get("model_name"),
-                                      self.hparams.get("dataset_path"),
-                                      self.features,
+                                      dataset,
+                                      features,
                                       self.hparams.get("max_seq_length"),
                                       self.hparams.get("train_batch_size"),
                                       self.hparams.get("valid_batch_size")
                                       )
         dm.load_data()
-        dm.setup()
         return dm
 
-
     def load_best_model(self):
-        path = self.experiment_path / "checkpoint-epoch=0.ckpt"
-        model = T5SimplificationModel.load_from_checkpoint(path)
+        checkpoints = self.experiment_path.glob('checkpoint*')
+        best_checkpoint = str(sorted(checkpoints, reverse=True)[0])
+        model = T5SimplificationModel.load_from_checkpoint(best_checkpoint)
         return model
 
     def _create_experiment_id(self) -> Path:
@@ -81,15 +91,10 @@ class Experiment:
             accelerator=self.hparams.get("accelerator", "gpu"),
             accumulate_grad_batches=1,
             gpus=torch.cuda.device_count(),
-            max_epochs=self.hparams.get("max_epochs", 1),
+            max_epochs=self.hparams.get("number_epochs", 1),
             precision=16 if self.hparams.get("fp_16") else 32,
-            callbacks=[LoggingCallback(), checkpoint_callback],
+            callbacks=[LoggingCallback(), checkpoint_callback, LitProgressBar()],
             num_sanity_val_steps=0,
-            progress_bar_refresh_rate=1,
         )
 
         return trainer_conf
-
-
-
-

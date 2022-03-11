@@ -13,7 +13,7 @@ from tqdm import tqdm
 from pathlib import Path
 import numpy as np
 from string import punctuation
-nltk.download('stopwords')
+nltk.download('stopwords',quiet=True)
 from nltk.corpus import stopwords
 from conf import DUMPS_DIR, WORD_EMBEDDINGS_NAME
 stopwords = set(stopwords.words("english"))

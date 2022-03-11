@@ -41,7 +41,7 @@ if __name__ == "__main__":
     config = dict(
         model_name='t5-small',
         dataset_path=WIKILARGE_CHUNK_DATASET,
-        max_epochs=1,
+        number_epochs=5,
         max_seq_length=32,
         learning_rate=3e-4,
         weight_decay=0.1,
@@ -49,7 +49,6 @@ if __name__ == "__main__":
         warmup_steps=5,
         train_batch_size=6,
         valid_batch_size=6,
-        num_train_epochs=5,
         custom_loss=False,
         gradient_accumulation_steps=1,  # 16
         accelerator="gpu",

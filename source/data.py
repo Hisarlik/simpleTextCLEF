@@ -65,13 +65,13 @@ class SimplificationDataModule(LightningDataModule):
         self._tokenize_dataset()
 
     def train_dataloader(self):
-        return DataLoader(self.dataset["train"], batch_size=self.train_batch_size, num_workers=2)
+        return DataLoader(self.dataset["train"], batch_size=self.train_batch_size, num_workers=1)
 
     def val_dataloader(self):
-        return DataLoader(self.dataset["valid"], batch_size=self.eval_batch_size, num_workers=2)
+        return DataLoader(self.dataset["valid"], batch_size=self.eval_batch_size, num_workers=1)
 
     def test_dataloader(self):
-        return DataLoader(self.dataset["test"], batch_size=self.eval_batch_size, num_workers=2)
+        return DataLoader(self.dataset["test"], batch_size=self.eval_batch_size, num_workers=1)
 
     def load_data(self):
         """Loading dataset into Hugging Face DatasetDict """

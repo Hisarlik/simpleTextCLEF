@@ -9,12 +9,9 @@ from typing import Dict
 from pathlib import Path
 
 from easse.sari import corpus_sari
-from pytorch_lightning import Trainer
 
 from source.utils import storage
 from source.optimization import Experiment
-from source.data import SimplificationDataModule
-from source.model import T5SimplificationModel
 from conf import WIKILARGE_CHUNK_DATASET
 
 
@@ -31,13 +28,11 @@ def evaluate(experiment: Experiment,
              dataset: Path,
              features: Dict):
 
-    #dm = SimplificationDataModule('t5-small', dataset, features)
-    dm = experiment.create_and_setup_data_module()
+    dm = experiment.create_and_setup_data_module(dataset, features)
     trainer = experiment.create_trainer()
     model = experiment.load_best_model()
-    #trainer = Trainer(gpus=1)
     trainer.test(model, datamodule=dm)
-    print(len(model.predictions))
+
 
     original_sents_paths = []
     simple_sents_paths = []
@@ -68,7 +63,8 @@ if __name__ == "__main__":
         WordRankRatio=dict(target_ratio=0.8)
     )
 
-    experiment_id = "20220310185939"
+    experiment_id = None
+
     experiment = storage.load_experiment(experiment_id)
     print(experiment)
     evaluate(experiment, WIKILARGE_CHUNK_DATASET, features)

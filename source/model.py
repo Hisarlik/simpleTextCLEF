@@ -80,12 +80,12 @@ class T5SimplificationModel(pl.LightningModule):
             decoder_attention_mask=batch['target_mask'],
         )
         loss = outputs.loss
-        self.log('train_loss', loss, on_step=True, prog_bar=True, logger=True)
+        self.log('train_loss', loss, on_epoch=False, prog_bar=True, logger=True, batch_size=batch['input_ids'].size(dim=0))
         return loss
 
     def validation_step(self, batch, batch_idx):
         loss = self.sari_validation_step(batch)
-        self.log('val_loss', loss)
+        self.log('val_loss', loss, batch_size=batch['input_ids'].size(dim=0))
         return torch.tensor(loss, dtype=float)
 
     def test_step(self, batch, batch_idx):
