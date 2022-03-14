@@ -1,4 +1,4 @@
-from abc import ABC,abstractmethod
+from abc import ABC, abstractmethod
 import re
 from sacremoses import MosesDetokenizer, MosesTokenizer
 import Levenshtein
@@ -13,30 +13,48 @@ from tqdm import tqdm
 from pathlib import Path
 import numpy as np
 from string import punctuation
-nltk.download('stopwords',quiet=True)
+
+nltk.download('stopwords', quiet=True)
 from nltk.corpus import stopwords
 from conf import DUMPS_DIR, WORD_EMBEDDINGS_NAME
+
 stopwords = set(stopwords.words("english"))
 
+
 def ControlDivisionByZero(numerator, denominator):
-    return numerator/denominator if denominator !=0 else 0
+    return numerator / denominator if denominator != 0 else 0
+
 
 class FeatureAbstract(ABC):
 
     @abstractmethod
-    def get_ratio(self, kwargs, target_ratio):
+    def get_ratio(self, kwargs):
+        pass
+
+    @abstractmethod
+    def calculate_ratio(self, simple_text, original_text):
         pass
 
 
 class Feature(FeatureAbstract):
 
-    def __init__(self, ratio):
-        self.ratio = ratio
+    def __init__(self, stage, target_ratio):
+        self.stage = stage
+        self.target_ratio = target_ratio
 
-    def get_ratio(self, kwargs, target_ratio):
+    def get_ratio(self, kwargs):
         if not 'original_text_preprocessed' in kwargs:
             kwargs['original_text_preprocessed'] = ""
 
+        simple_text = kwargs.get('simple_text')
+        original_text = kwargs.get('original_text')
+        if self.stage == "fit":
+            result_ratio = self.calculate_ratio(simple_text, original_text)
+        elif self.stage == "test":
+            result_ratio = self.target_ratio
+        else:
+            raise ValueError("stage value not supported")
+        kwargs['original_text_preprocessed'] += f'{self.name}_{result_ratio} '
         return kwargs
 
     @property
@@ -48,93 +66,47 @@ class Feature(FeatureAbstract):
         if not name: name = class_name
         return name
 
+
 class WordLengthRatio(Feature):
 
-    def __init__(self, ratio=0.7):
-        super().__init__(ratio)
-        self.tokenizer = MosesTokenizer(lang='en')
-        self.ratio = ratio
-
-    def get_ratio(self, kwargs, target_ratio):
-
-        kwargs = super().get_ratio(kwargs, target_ratio)
-
-        simple_text = kwargs.get('simple_text')
-        original_text = kwargs.get('original_text')
-
-        result_ratio = self.calculate_ratio(simple_text, original_text)
-
-        kwargs['original_text_preprocessed'] += f'{self.name}_{result_ratio} '
-        return kwargs
+    def __init__(self, stage, target_ratio):
+        super().__init__(stage, target_ratio)
+        if stage == "fit":
+            self.tokenizer = MosesTokenizer(lang='en')
 
     def calculate_ratio(self, simple_text, original_text):
-
         return round(ControlDivisionByZero(
-                                            len(self.tokenizer.tokenize(simple_text)),
-                                            len(self.tokenizer.tokenize(original_text))), 2)
-
-
+            len(self.tokenizer.tokenize(simple_text)),
+            len(self.tokenizer.tokenize(original_text))), 2)
 
 
 class CharLengthRatio(Feature):
 
-    def __init__(self, ratio=0.7):
-        super().__init__(ratio)
-        self.ratio = ratio
-
-    def get_ratio(self, kwargs, target_ratio):
-
-        kwargs = super().get_ratio(kwargs, target_ratio)
-
-        simple_text = kwargs.get('simple_text')
-        original_text = kwargs.get('original_text')
-
-        result_ratio = self.calculate_ratio(simple_text, original_text)
-
-        kwargs['original_text_preprocessed'] += f'{self.name}_{result_ratio} '
-        return kwargs
+    def __init__(self, stage, target_ratio):
+        super().__init__(stage, target_ratio)
 
     def calculate_ratio(self, simple_text, original_text):
-
         return round(ControlDivisionByZero(
-                                            len(simple_text),
-                                            len(original_text)), 2)
+            len(simple_text),
+            len(original_text)), 2)
 
 
 class LevenshteinRatio(Feature):
 
-    def __init__(self, ratio=0.7):
-        super().__init__(ratio)
-        self.ratio = ratio
-
-    def get_ratio(self, kwargs, target_ratio):
-
-        kwargs = super().get_ratio(kwargs, target_ratio)
-
-        simple_text = kwargs.get('simple_text')
-        original_text = kwargs.get('original_text')
-
-        result_ratio = self.calculate_ratio(simple_text, original_text)
-
-        kwargs['original_text_preprocessed'] += f'{self.name}_{result_ratio} '
-        return kwargs
+    def __init__(self, stage, target_ratio):
+        super().__init__(stage, target_ratio)
 
     def calculate_ratio(self, simple_text, original_text):
-
         return round(Levenshtein.ratio(original_text,
-                                simple_text), 2)
-
-
-
+                                       simple_text), 2)
 
 
 class DependencyTreeDepthRatio(Feature):
 
-    def __init__(self, ratio=0.7):
-        super().__init__(ratio)
-        self.ratio = ratio
-        self.nlp = self.get_spacy_model()
-
+    def __init__(self, stage, target_ratio):
+        super().__init__(stage, target_ratio)
+        if stage == "fit":
+            self.nlp = self.get_spacy_model()
 
     def get_spacy_model(self):
 
@@ -144,16 +116,13 @@ class DependencyTreeDepthRatio(Feature):
             spacy.cli.link(model, model, force=True, model_path=spacy.util.get_package_path(model))
         return spacy.load(model)
 
-    def get_ratio(self, kwargs, target_ratio):
-
-        kwargs = super().get_ratio(kwargs, target_ratio)
+    def calculate_ratio(self, simple_text, original_text):
 
         result_ratio = round(ControlDivisionByZero(
-                                self.get_dependency_tree_depth(kwargs.get('simple_text')),
-                                self.get_dependency_tree_depth(kwargs.get('original_text'))),2)
+            self.get_dependency_tree_depth(simple_text),
+            self.get_dependency_tree_depth(original_text)), 2)
 
-        kwargs['original_text_preprocessed'] += f'{self.name}_{result_ratio} '
-        return kwargs
+        return result_ratio
 
     def get_dependency_tree_depth(self, sentence):
 
@@ -170,24 +139,21 @@ class DependencyTreeDepthRatio(Feature):
 
 class WordRankRatio(Feature):
 
-    def __init__(self, ratio=0.7):
-        super().__init__(ratio)
-        self.tokenizer = MosesTokenizer(lang='en')
-        self.word2rank = self._get_word2rank()
-        self.length_rank = len(self.word2rank)
-        self.ratio = ratio
+    def __init__(self, stage, target_ratio):
+        super().__init__(stage, target_ratio)
+        if stage == "fit":
+            self.tokenizer = MosesTokenizer(lang='en')
+            self.word2rank = self._get_word2rank()
+            self.length_rank = len(self.word2rank)
 
 
-    def get_ratio(self, kwargs, target_ratio):
+    def calculate_ratio(self, simple_text, original_text):
 
-        kwargs = super().get_ratio(kwargs, target_ratio)
+        result_ratio = round(min(ControlDivisionByZero(self.get_lexical_complexity_score(simple_text),
+                                                       self.get_lexical_complexity_score(original_text)),
+                                 2), 2)
 
-        result_ratio = round(min(ControlDivisionByZero(self.get_lexical_complexity_score(kwargs.get('simple_text')),
-                                               self.get_lexical_complexity_score(kwargs.get('original_text'))), 2), 2)
-
-        kwargs['original_text_preprocessed'] += f'{self.name}_{result_ratio} '
-        return kwargs
-
+        return result_ratio
 
     def get_lexical_complexity_score(self, sentence):
 
@@ -264,7 +230,6 @@ class WordRankRatio(Feature):
             for line in f:
                 yield line.rstrip()
 
-
     def _download_url(self, url, output_path):
         name = url.split('/')[-1]
         file_path = f'{output_path}/{name}'
@@ -301,19 +266,10 @@ class WordRankRatio(Feature):
         return inner
 
 
-
 if __name__ == "__main__":
-
     tokenizer = MosesTokenizer(lang='en')
 
     simple_text = "Hello my name is"
     complex_text = "Hello my name is Antonio Hello my name is Antonio"
 
-
-    result_ratio = round(ControlDivisionByZero(
-        len(tokenizer.tokenize(simple_text)),
-        len(tokenizer.tokenize(complex_text))), 2)
-
-
-    print(result_ratio)
-
+    charLength = CharLengthRatio("test", )

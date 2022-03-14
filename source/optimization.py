@@ -1,5 +1,5 @@
 import os
-from typing import Dict
+from typing import Dict, Optional
 from datetime import datetime
 from pathlib import Path
 from dataclasses import dataclass, field
@@ -46,7 +46,7 @@ class Experiment:
         dataset_path = self.hparams.get('dataset_path')
 
         # Creating Pytorch Lightning DataModule
-        dm = self.create_and_setup_data_module(dataset_path, self.features)
+        dm = self.create_and_setup_data_module(dataset_path, self.features, "fit")
 
         # Creating T5 simplification model.
         # TODO: Modify to instantiate the model class using its name. e.g T5 -> T5SimplificationModel-
@@ -60,7 +60,11 @@ class Experiment:
         trainer = pl.Trainer(**trainer_configuration)
         return trainer
 
-    def create_and_setup_data_module(self, dataset: Path, features: Dict) -> SimplificationDataModule:
+    def create_and_setup_data_module(self,
+                                     dataset: Path,
+                                     features: Dict,
+                                     stage: Optional[str]) -> SimplificationDataModule:
+
         dm = SimplificationDataModule(self.hparams.get("model_name"),
                                       dataset,
                                       features,
@@ -68,7 +72,7 @@ class Experiment:
                                       self.hparams.get("train_batch_size"),
                                       self.hparams.get("valid_batch_size")
                                       )
-        dm.load_data()
+        dm.setup(stage)
         return dm
 
     def load_best_model(self):

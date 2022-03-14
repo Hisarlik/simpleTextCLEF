@@ -26,7 +26,6 @@ class LoggingCallback(pl.Callback):
 
     def on_test_end(self, trainer, pl_module):
         logger.info("***** Test results *****")
-        print(pl_module.hparams)
         path = pl_module.hparams.get('experiment_path') / "test_results.txt"
         predictions = pl_module.predictions
         if predictions:
@@ -50,13 +49,14 @@ class T5SimplificationModel(pl.LightningModule):
 
     def setup(self, stage=None) -> None:
         # Get dataloader by calling it - train_dataloader() is called after setup() by default
-        train_loader = self.trainer.datamodule.train_dataloader()
+        if stage == "fit":
+            train_loader = self.trainer.datamodule.train_dataloader()
 
-        # Calculate total steps
-        tb_size = self.hparams.train_batch_size * max(1, self.trainer.gpus)
-        ab_size = tb_size * self.trainer.accumulate_grad_batches
-        self.total_steps = int((len(train_loader.dataset) / ab_size) * float(self.trainer.max_epochs))
-        logger.debug(f"Total steps: {self.total_steps}")
+            # Calculate total steps
+            tb_size = self.hparams.train_batch_size * max(1, self.trainer.gpus)
+            ab_size = tb_size * self.trainer.accumulate_grad_batches
+            self.total_steps = int((len(train_loader.dataset) / ab_size) * float(self.trainer.max_epochs))
+            logger.debug(f"Total steps: {self.total_steps}")
 
     def forward(
             self, input_ids, attention_mask=None, decoder_input_ids=None, decoder_attention_mask=None, labels=None

@@ -43,23 +43,33 @@ class SimplificationDataModule(LightningDataModule):
         self.eval_batch_size = eval_batch_size
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, use_fast=True)
 
-
     def setup(self, stage: Optional[str] = None):
         """DataModule pipeline. Load data, add and store features and then tokenize text"""
 
-        path = self._get_path_from_features()
-        if self._exists_preprocessed_dataset(path):
-            logger.info(f"Features calculated previously. Loading preprocessed dataset at: {path}")
-            self.dataset = self._load_preprocessed_dataset(path)
-        else:
+        if stage == "fit":
+            print("train")
+            path = self._get_path_from_features()
+            if self._exists_preprocessed_dataset(path):
+                logger.info(f"Features calculated previously. Loading preprocessed dataset at: {path}")
+                self.dataset = self._load_preprocessed_dataset(path)
+            else:
+                logger.info(f"Loading dataset")
+                self.dataset = self.load_data(stage)
+
+                logger.info("Calculating features")
+                self._add_features(stage)
+
+                logger.info("Storing preprocessed dataset")
+                self._store_preprocessed_dataset()
+        elif stage == "test":
+            print("test")
             logger.info(f"Loading dataset")
-            self.dataset = self.load_data()
+            self.dataset = self.load_data(stage)
 
             logger.info("Calculating features")
-            self._add_features()
-
-            logger.info("Storing preprocessed dataset")
-            self._store_preprocessed_dataset()
+            self._add_features(stage)
+        else:
+            raise ValueError("Stage value not supported")
 
         logger.info("Tokenizing dataset")
         self._tokenize_dataset()
@@ -73,54 +83,67 @@ class SimplificationDataModule(LightningDataModule):
     def test_dataloader(self):
         return DataLoader(self.dataset["test"], batch_size=self.eval_batch_size, num_workers=1)
 
-    def load_data(self):
+    def load_data(self, stage: str = None):
         """Loading dataset into Hugging Face DatasetDict """
 
-        #TODO: Currently only supported one simple file. It has to be changed to support multiple files.
+        # TODO: Currently only supported one simple file. It has to be changed to support multiple files.
 
-        train_original_data = pd.read_csv(Path(self.data_path) / (self.data_path.name+".train.complex"),
-                                          sep="\t", header=None, names=["original_text"])
+        if stage == "fit":
+            train_original_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".train.complex"),
+                                              sep="\t", header=None, names=["original_text"])
 
-        train_simple_data = pd.read_csv(Path(self.data_path) / (self.data_path.name+".train.simple"),
-                                        sep="\t", header=None, names=["simple_text"])
+            train_simple_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".train.simple"),
+                                            sep="\t", header=None, names=["simple_text"])
 
-        valid_original_data = pd.read_csv(Path(self.data_path) / (self.data_path.name+".valid.complex"),
-                                          sep="\t", header=None, names=["original_text"])
+            valid_original_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".valid.complex"),
+                                              sep="\t", header=None, names=["original_text"])
 
-        valid_simple_data = pd.read_csv(Path(self.data_path) / (self.data_path.name+".valid.simple"),
-                                        sep="\t", header=None, names=["simple_text"])
+            valid_simple_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".valid.simple"),
+                                            sep="\t", header=None, names=["simple_text"])
 
-        test_original_data = pd.read_csv(Path(self.data_path) / (self.data_path.name+".test.complex"),
-                                         sep="\t", header=None, names=["original_text"])
+            train_data = pd.concat([train_original_data, train_simple_data], axis=1)
+            valid_data = pd.concat([valid_original_data, valid_simple_data], axis=1)
 
-        test_simple_data = pd.read_csv(Path(self.data_path) / (self.data_path.name+".test.simple"),
-                                       sep="\t", header=None, names=["simple_text"])
+            dataset_created = datasets.DatasetDict({
+                'train': datasets.Dataset.from_pandas(train_data),
+                'valid': datasets.Dataset.from_pandas(valid_data)
+            })
 
-        train_data = pd.concat([train_original_data, train_simple_data], axis=1)
-        valid_data = pd.concat([valid_original_data, valid_simple_data], axis=1)
-        test_data = pd.concat([test_original_data, test_simple_data], axis=1)
+        elif stage == "test":
 
-        train_test_valid_dataset = datasets.DatasetDict({
-            'train': datasets.Dataset.from_pandas(train_data),
-            'valid': datasets.Dataset.from_pandas(valid_data),
-            'test': datasets.Dataset.from_pandas(test_data)
-        })
+            test_original_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".test.complex"),
+                                             sep="\t", header=None, names=["original_text"])
 
-        return train_test_valid_dataset
+            test_simple_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".test.simple"),
+                                           sep="\t", header=None, names=["simple_text"])
 
-    def _add_features(self):
 
+            test_data = pd.concat([test_original_data, test_simple_data], axis=1)
+
+            dataset_created = datasets.DatasetDict({
+                'test': datasets.Dataset.from_pandas(test_data)
+            })
+
+        return dataset_created
+
+    def _add_features(self, stage: str = "train"):
 
         for feature, kwargs in self.model_features.items():
+
             logger.info(f"Calculating feature: {feature}")
-            self.dataset = self.dataset.map(getattr(features, feature)().get_ratio,
-                                            fn_kwargs=kwargs)
+            self.dataset = self.dataset.map(getattr(features, feature)(stage, **kwargs).get_ratio)
+
             logger.info(f"Feature: {feature} calculated.")
+
+
 
         self.dataset = self.dataset.map(lambda example: {'original_text_preprocessed':
                                                              "simplify: " +
                                                              example['original_text_preprocessed'] +
                                                              example['original_text']})
+
+        print(self.dataset["test"][0]["original_text_preprocessed"])
+        print()
 
     def _tokenize_dataset(self):
 
@@ -185,4 +208,3 @@ class SimplificationDataModule(LightningDataModule):
         preprocessed_name += str(len(self.model_features))
         path = PREPROCESSED_DIR / preprocessed_name
         return path
-

@@ -20,7 +20,7 @@ def evaluate(experiment: Experiment,
              dataset: Path,
              features: Dict):
 
-    dm = experiment.create_and_setup_data_module(dataset, features)
+    dm = experiment.create_and_setup_data_module(dataset, features, "test")
     trainer = experiment.create_trainer()
     model = experiment.load_best_model()
     trainer.test(model, datamodule=dm)
@@ -31,7 +31,7 @@ def evaluate(experiment: Experiment,
 
 if __name__ == "__main__":
     features = dict(
-        WordLengthRatio=dict(target_ratio=0.8),
+        WordLengthRatio=dict(target_ratio=0.9),
         CharLengthRatio=dict(target_ratio=0.8),
         LevenshteinRatio=dict(target_ratio=0.8),
         DependencyTreeDepthRatio=dict(target_ratio=0.8),
