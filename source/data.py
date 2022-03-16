@@ -47,7 +47,7 @@ class SimplificationDataModule(LightningDataModule):
         """DataModule pipeline. Load data, add and store features and then tokenize text"""
 
         if stage == "fit":
-            print("train")
+
             path = self._get_path_from_features()
             if self._exists_preprocessed_dataset(path):
                 logger.info(f"Features calculated previously. Loading preprocessed dataset at: {path}")
@@ -62,7 +62,7 @@ class SimplificationDataModule(LightningDataModule):
                 logger.info("Storing preprocessed dataset")
                 self._store_preprocessed_dataset()
         elif stage == "test":
-            print("test")
+
             logger.info(f"Loading dataset")
             self.dataset = self.load_data(stage)
 
@@ -87,7 +87,7 @@ class SimplificationDataModule(LightningDataModule):
         """Loading dataset into Hugging Face DatasetDict """
 
         # TODO: Currently only supported one simple file. It has to be changed to support multiple files.
-
+        dataset_created = None
         if stage == "fit":
             train_original_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".train.complex"),
                                               sep="\t", header=None, names=["original_text"])
@@ -135,15 +135,10 @@ class SimplificationDataModule(LightningDataModule):
 
             logger.info(f"Feature: {feature} calculated.")
 
-
-
         self.dataset = self.dataset.map(lambda example: {'original_text_preprocessed':
                                                              "simplify: " +
                                                              example['original_text_preprocessed'] +
                                                              example['original_text']})
-
-        print(self.dataset["test"][0]["original_text_preprocessed"])
-        print()
 
     def _tokenize_dataset(self):
 
