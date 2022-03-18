@@ -13,11 +13,11 @@ from source.features import ControlDivisionByZero, \
 class TestWordLengthRatioFeature(unittest.TestCase):
 
     def setUp(self):
+        self.feature_model = WordLengthRatio("fit", 0.8)
         self.tokenizer = MosesTokenizer(lang='en')
         self.original_text = "For example , King Bhumibol was born on Monday , " \
                              "so on his birthday throughout Thailand will be decorated with yellow color ."
         self.simple_text = "All over Thailand the color yellow will be used to celebrate King Bhumibal."
-
 
     def test_control_division_by_zero(self):
         self.assertEqual(ControlDivisionByZero(4, 0), 0)
@@ -25,7 +25,7 @@ class TestWordLengthRatioFeature(unittest.TestCase):
         self.assertEqual(ControlDivisionByZero(3.2, 2), 1.6)
 
     def test_word_length_ratio(self):
-        result_ratio = WordLengthRatio().calculate_ratio(self.simple_text, self.original_text)
+        result_ratio = self.feature_model.calculate_ratio(self.simple_text, self.original_text)
 
         self.assertEqual(result_ratio, 0.61)
 
@@ -33,12 +33,13 @@ class TestWordLengthRatioFeature(unittest.TestCase):
 class TestCharLengthRatioFeature(unittest.TestCase):
 
     def setUp(self):
+        self.feature_model = CharLengthRatio("fit", 0.8)
         self.original_text = "For example , King Bhumibol was born on Monday , " \
                              "so on his birthday throughout Thailand will be decorated with yellow color ."
         self.simple_text = "All over Thailand the color yellow will be used to celebrate King Bhumibal."
 
     def test_char_length_ratio(self):
-        result_ratio = CharLengthRatio().calculate_ratio(self.simple_text, self.original_text)
+        result_ratio = self.feature_model.calculate_ratio(self.simple_text, self.original_text)
         self.assertEqual(result_ratio, 0.6)
 
 
@@ -46,12 +47,13 @@ class TestCharLengthRatioFeature(unittest.TestCase):
 class TestLevenshteinRatioFeature(unittest.TestCase):
 
     def setUp(self):
+        self.feature_model = LevenshteinRatio("fit", 0.8)
         self.original_text = "For example , King Bhumibol was born on Monday , " \
                              "so on his birthday throughout Thailand will be decorated with yellow color ."
         self.simple_text = "All over Thailand the color yellow will be used to celebrate King Bhumibal."
 
     def test_levenshtein_ratio(self):
-        result_ratio = LevenshteinRatio().calculate_ratio(self.simple_text, self.original_text)
+        result_ratio = self.feature_model.calculate_ratio(self.simple_text, self.original_text)
         self.assertEqual(result_ratio, 0.37)
 
 
@@ -59,7 +61,7 @@ class TestDependencyTreeDepthRatio(unittest.TestCase):
 
     def setUp(self):
 
-        self.feature_model = DependencyTreeDepthRatio()
+        self.feature_model = DependencyTreeDepthRatio("fit", 0.8)
         self.simple_text = "All over Thailand the color yellow will be used to celebrate King Bhumibal."
 
     def test_dependency_tree_depth_ratio(self):
@@ -70,7 +72,7 @@ class TestDependencyTreeDepthRatio(unittest.TestCase):
 class TestWordRankRatio(unittest.TestCase):
 
     def setUp(self):
-        self.feature_model = WordRankRatio()
+        self.feature_model = WordRankRatio("fit", 0.8)
         self.simple_text = "All over Thailand the color yellow will be used to celebrate King Bhumibal."
 
     def test_get_lexical_complexity_score(self):
@@ -79,8 +81,6 @@ class TestWordRankRatio(unittest.TestCase):
 
     def tearDown(self):
         self.feature_model = None
-
-
 
 
 if __name__ == '__main__':

@@ -35,6 +35,7 @@ class SimplificationDataModule(LightningDataModule):
 
         super().__init__()
         self.dataset = None
+        self.stage = None
         self.model_name = model_name
         self.data_path = data_path
         self.model_features = collections.OrderedDict(sorted(model_features.items()))
@@ -43,10 +44,12 @@ class SimplificationDataModule(LightningDataModule):
         self.eval_batch_size = eval_batch_size
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, use_fast=True)
 
-    def setup(self, stage: Optional[str] = None):
+    def setup(self, stage: str = "fit"):
         """DataModule pipeline. Load data, add and store features and then tokenize text"""
 
-        if stage == "fit":
+        self.stage = stage
+
+        if self.stage == "fit":
 
             path = self._get_path_from_features()
             if self._exists_preprocessed_dataset(path):
@@ -54,20 +57,21 @@ class SimplificationDataModule(LightningDataModule):
                 self.dataset = self._load_preprocessed_dataset(path)
             else:
                 logger.info(f"Loading dataset")
-                self.dataset = self.load_data(stage)
+                self.dataset = self.load_data()
 
                 logger.info("Calculating features")
-                self._add_features(stage)
+                self._add_features()
 
                 logger.info("Storing preprocessed dataset")
                 self._store_preprocessed_dataset()
-        elif stage == "test":
+
+        elif self.stage == "test":
 
             logger.info(f"Loading dataset")
-            self.dataset = self.load_data(stage)
+            self.dataset = self.load_data()
 
             logger.info("Calculating features")
-            self._add_features(stage)
+            self._add_features()
         else:
             raise ValueError("Stage value not supported")
 
@@ -83,12 +87,11 @@ class SimplificationDataModule(LightningDataModule):
     def test_dataloader(self):
         return DataLoader(self.dataset["test"], batch_size=self.eval_batch_size, num_workers=1)
 
-    def load_data(self, stage: str = None):
+    def load_data(self):
         """Loading dataset into Hugging Face DatasetDict """
 
         # TODO: Currently only supported one simple file. It has to be changed to support multiple files.
-        dataset_created = None
-        if stage == "fit":
+        if self.stage == "fit":
             train_original_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".train.complex"),
                                               sep="\t", header=None, names=["original_text"])
 
@@ -109,29 +112,22 @@ class SimplificationDataModule(LightningDataModule):
                 'valid': datasets.Dataset.from_pandas(valid_data)
             })
 
-        elif stage == "test":
+        else:  # self.stage == "test
 
             test_original_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".test.complex"),
                                              sep="\t", header=None, names=["original_text"])
 
-            test_simple_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".test.simple"),
-                                           sep="\t", header=None, names=["simple_text"])
-
-
-            test_data = pd.concat([test_original_data, test_simple_data], axis=1)
-
             dataset_created = datasets.DatasetDict({
-                'test': datasets.Dataset.from_pandas(test_data)
+                'test': datasets.Dataset.from_pandas(test_original_data)
             })
 
         return dataset_created
 
-    def _add_features(self, stage: str = "train"):
+    def _add_features(self):
 
         for feature, kwargs in self.model_features.items():
-
             logger.info(f"Calculating feature: {feature}")
-            self.dataset = self.dataset.map(getattr(features, feature)(stage, **kwargs).get_ratio)
+            self.dataset = self.dataset.map(getattr(features, feature)(self.stage, **kwargs).get_ratio)
 
             logger.info(f"Feature: {feature} calculated.")
 
@@ -139,6 +135,9 @@ class SimplificationDataModule(LightningDataModule):
                                                              "simplify: " +
                                                              example['original_text_preprocessed'] +
                                                              example['original_text']})
+        phase = next(iter(self.dataset.keys()))
+        print(phase)
+        logger.info(f"Example:{self.dataset[phase][0]}")
 
     def _tokenize_dataset(self):
 
@@ -147,30 +146,43 @@ class SimplificationDataModule(LightningDataModule):
                 self._tokenize_batch,
                 batched=True
             )
+        if self.stage == "fit":
 
-        columns = ["input_ids", "labels", "attention_mask", "target_mask"]
-        self.dataset.set_format(type="torch", columns=columns, output_all_columns=True)
+            columns = ["input_ids", "labels", "attention_mask", "target_mask"]
 
-        for split in self.dataset.keys():
-            self.dataset[split] = self.dataset[split].map(
-                self._replace_pad_token_id,
-            )
+            self.dataset.set_format(type="torch", columns=columns, output_all_columns=True)
+
+            for split in self.dataset.keys():
+                self.dataset[split] = self.dataset[split].map(
+                    self._replace_pad_token_id,
+                )
+
+        else:
+            columns = ["input_ids", "attention_mask"]
+
+            self.dataset.set_format(type="torch", columns=columns, output_all_columns=True)
 
     def _tokenize_batch(self, batch):
 
         input_encodings = self.tokenizer(batch["original_text_preprocessed"], max_length=256,
                                          truncation=True, padding="max_length")
+        if self.stage == "fit":
+            with self.tokenizer.as_target_tokenizer():
+                target_encodings = self.tokenizer(batch["simple_text"], max_length=256,
+                                                  truncation=True, padding="max_length")
 
-        with self.tokenizer.as_target_tokenizer():
-            target_encodings = self.tokenizer(batch["simple_text"], max_length=256,
-                                              truncation=True, padding="max_length")
+            return {"original_text": batch["original_text"],
+                    "input_ids": input_encodings["input_ids"],
+                    "attention_mask": input_encodings["attention_mask"],
+                    "simple_text": batch["simple_text"],
+                    "labels": target_encodings["input_ids"],
+                    "target_mask": target_encodings["attention_mask"]}
 
-        return {"original_text": batch["original_text"],
-                "input_ids": input_encodings["input_ids"],
-                "attention_mask": input_encodings["attention_mask"],
-                "simple_text": batch["simple_text"],
-                "labels": target_encodings["input_ids"],
-                "target_mask": target_encodings["attention_mask"]}
+        elif self.stage == "test":
+
+            return {"original_text": batch["original_text"],
+                    "input_ids": input_encodings["input_ids"],
+                    "attention_mask": input_encodings["attention_mask"]}
 
     def _replace_pad_token_id(self, batch):
 
