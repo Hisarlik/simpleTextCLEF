@@ -31,7 +31,7 @@ def evaluate(experiment: Experiment,
 
 if __name__ == "__main__":
     features = dict(
-        WordLengthRatio=dict(target_ratio=0.9),
+        WordLengthRatio=dict(target_ratio=1),
         CharLengthRatio=dict(target_ratio=0.8),
         LevenshteinRatio=dict(target_ratio=0.8),
         DependencyTreeDepthRatio=dict(target_ratio=0.8),

@@ -28,8 +28,8 @@ def main(model_hyperparameters: Dict,
 
 if __name__ == "__main__":
     features = dict(
-        WordLengthRatio=dict(target_ratio=0.8),
-        CharLengthRatio=dict(target_ratio=0.8),
+        WordLengthRatio=dict(target_ratio=0.9),
+        CharLengthRatio=dict(target_ratio=0.9),
         LevenshteinRatio=dict(target_ratio=0.8),
         DependencyTreeDepthRatio=dict(target_ratio=0.8),
         WordRankRatio=dict(target_ratio=0.8)

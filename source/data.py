@@ -91,13 +91,13 @@ class SimplificationDataModule(LightningDataModule):
         """Loading dataset into Hugging Face DatasetDict. simple validation data can included multiple files."""
 
         if self.stage == "fit":
-            train_original_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".train.complex"),
+            train_original_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".train.complex.txt"),
                                               sep="\t", header=None, names=["original_text"])
 
-            train_simple_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".train.simple"),
+            train_simple_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".train.simple.txt"),
                                             sep="\t", header=None, names=["simple_text"])
 
-            valid_original_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".valid.complex"),
+            valid_original_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".valid.complex.txt"),
                                               sep="\t", header=None, names=["original_text"])
 
             valid_simple_data = pd.concat([pd.read_csv(item, names=[item.name], sep="\t")
@@ -113,7 +113,7 @@ class SimplificationDataModule(LightningDataModule):
 
         else:  # self.stage == "test
 
-            test_original_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".test.complex"),
+            test_original_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".test.complex.txt"),
                                              sep="\t", header=None, names=["original_text"])
 
             dataset_created = datasets.DatasetDict({
