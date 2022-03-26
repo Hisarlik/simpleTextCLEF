@@ -5,7 +5,7 @@ import collections
 
 import datasets
 import pandas as pd
-from datasets import DatasetDict
+from datasets import Dataset
 from pytorch_lightning import LightningDataModule
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer
@@ -53,8 +53,10 @@ class SimplificationDataModule(LightningDataModule):
 
             path = self._get_path_from_features()
             if self._exists_preprocessed_dataset(path):
+                preprocessed_train_data = True
+                self.dataset = self.load_data(preprocessed_train_data)
                 logger.info(f"Features calculated previously. Loading preprocessed dataset at: {path}")
-                self.dataset = self._load_preprocessed_dataset(path)
+                self.dataset["train"] = self._load_preprocessed_dataset(path)
             else:
                 logger.info(f"Loading dataset")
                 self.dataset = self.load_data()
@@ -87,7 +89,7 @@ class SimplificationDataModule(LightningDataModule):
     def test_dataloader(self):
         return DataLoader(self.dataset["test"], batch_size=self.eval_batch_size, num_workers=1)
 
-    def load_data(self):
+    def load_data(self, preprocessed_train_data=False):
         """Loading dataset into Hugging Face DatasetDict. simple validation data can included multiple files."""
 
         if self.stage == "fit":
@@ -106,10 +108,15 @@ class SimplificationDataModule(LightningDataModule):
             train_data = pd.concat([train_original_data, train_simple_data], axis=1)
             valid_data = pd.concat([valid_original_data, valid_simple_data], axis=1)
 
-            dataset_created = datasets.DatasetDict({
-                'train': datasets.Dataset.from_pandas(train_data),
-                'valid': datasets.Dataset.from_pandas(valid_data)
-            })
+            if preprocessed_train_data:
+                dataset_created = datasets.DatasetDict({
+                    'valid': datasets.Dataset.from_pandas(valid_data)
+                })
+            else:
+                dataset_created = datasets.DatasetDict({
+                    'train': datasets.Dataset.from_pandas(train_data),
+                    'valid': datasets.Dataset.from_pandas(valid_data)
+                })
 
         else:  # self.stage == "test
 
@@ -207,12 +214,12 @@ class SimplificationDataModule(LightningDataModule):
         return Path(path).exists()
 
     def _load_preprocessed_dataset(self, path):
-        return DatasetDict.load_from_disk(path)
+        return Dataset.load_from_disk(path)
 
     def _store_preprocessed_dataset(self):
 
         path = self._get_path_from_features()
-        self.dataset.save_to_disk(path)
+        self.dataset["train"].save_to_disk(path)
 
     def _get_path_from_features(self):
         preprocessed_name = ""
@@ -221,7 +228,7 @@ class SimplificationDataModule(LightningDataModule):
             for word in re.findall('[A-Z][^A-Z]*', feature):
                 if word: name += word[0]
             if not name: name = feature
-            preprocessed_name += name + str(self.model_features[feature]["target_ratio"]) + "__"
+            preprocessed_name += name + "_"
         preprocessed_name += str(len(self.model_features))
         path = PREPROCESSED_DIR / preprocessed_name
         return path
