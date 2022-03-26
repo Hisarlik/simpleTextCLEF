@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import re
-from sacremoses import MosesDetokenizer, MosesTokenizer
+from sacremoses import MosesTokenizer
 import Levenshtein
 import spacy
 import nltk
@@ -38,19 +38,20 @@ class FeatureAbstract(ABC):
 
 class Feature(FeatureAbstract):
 
-    def __init__(self, stage, target_ratio):
-        self.stage = stage
+    def __init__(self, split, target_ratio):
+        self.split = split
         self.target_ratio = target_ratio
 
     def get_ratio(self, kwargs):
         if not 'original_text_preprocessed' in kwargs:
             kwargs['original_text_preprocessed'] = ""
 
-        simple_text = kwargs.get('simple_text')
-        original_text = kwargs.get('original_text')
-        if self.stage == "fit":
+        if self.split == "train":
+            simple_text = kwargs.get('simple_text')
+            original_text = kwargs.get('original_text')
             result_ratio = self.calculate_ratio(simple_text, original_text)
-        elif self.stage == "test":
+
+        elif self.split == "valid" or self.split == "test":
             result_ratio = self.target_ratio
         else:
             raise ValueError("stage value not supported")
@@ -71,7 +72,7 @@ class WordLengthRatio(Feature):
 
     def __init__(self, stage, target_ratio):
         super().__init__(stage, target_ratio)
-        if stage == "fit":
+        if stage == "train":
             self.tokenizer = MosesTokenizer(lang='en')
 
     def calculate_ratio(self, simple_text, original_text):
@@ -105,7 +106,7 @@ class DependencyTreeDepthRatio(Feature):
 
     def __init__(self, stage, target_ratio):
         super().__init__(stage, target_ratio)
-        if stage == "fit":
+        if stage == "train":
             self.nlp = self.get_spacy_model()
 
     def get_spacy_model(self):
@@ -141,11 +142,10 @@ class WordRankRatio(Feature):
 
     def __init__(self, stage, target_ratio):
         super().__init__(stage, target_ratio)
-        if stage == "fit":
+        if stage == "train":
             self.tokenizer = MosesTokenizer(lang='en')
             self.word2rank = self._get_word2rank()
             self.length_rank = len(self.word2rank)
-
 
     def calculate_ratio(self, simple_text, original_text):
 
@@ -265,11 +265,3 @@ class WordRankRatio(Feature):
 
         return inner
 
-
-if __name__ == "__main__":
-    tokenizer = MosesTokenizer(lang='en')
-
-    simple_text = "Hello my name is"
-    complex_text = "Hello my name is Antonio Hello my name is Antonio"
-
-    charLength = CharLengthRatio("test", )

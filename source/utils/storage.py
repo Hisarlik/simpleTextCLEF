@@ -1,6 +1,6 @@
 import os
 import pickle
-
+from pathlib import Path
 from conf import OUTPUT_DIR
 
 
@@ -32,3 +32,8 @@ def save_file(path, texts):
             f.write(line)
             f.write('\n')
 
+def yield_lines(filepath):
+    #filepath = Path(filepath)
+    with filepath.open('r', encoding="latin-1") as f:
+        for line in f:
+            yield line.rstrip()

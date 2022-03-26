@@ -1,7 +1,9 @@
 import os
 from source.utils import logging_module
 import pytorch_lightning as pl
+from pytorch_lightning.callbacks import TQDMProgressBar
 import torch
+import pandas as pd
 from easse.sari import corpus_sari
 from transformers import (
     AdamW,
@@ -12,6 +14,14 @@ from transformers import (
 from source.utils import storage
 
 logger = logging_module.get_logger(__name__)
+
+
+class LitProgressBar(TQDMProgressBar):
+
+    def init_validation_tqdm(self):
+        bar = super().init_validation_tqdm()
+        bar.set_description('running validation ...')
+        return bar
 
 
 class LoggingCallback(pl.Callback):
@@ -78,11 +88,13 @@ class T5SimplificationModel(pl.LightningModule):
             decoder_attention_mask=batch['target_mask'],
         )
         loss = outputs.loss
+        #logger.info(f"train_loss: {loss}")
         self.log('train_loss', loss, on_epoch=False, prog_bar=True, logger=True, batch_size=batch['input_ids'].size(dim=0))
         return loss
 
     def validation_step(self, batch, batch_idx):
         loss = self.sari_validation_step(batch)
+        logger.info(f"valid_loss: {loss}")
         self.log('val_loss', loss, batch_size=batch['input_ids'].size(dim=0))
         return torch.tensor(loss, dtype=float)
 
@@ -151,6 +163,9 @@ class T5SimplificationModel(pl.LightningModule):
                                                   skip_special_tokens=True,
                                                   clean_up_tokenization_spaces=True)
 
-        score = corpus_sari(batch["original_text"], predictions, [batch["simple_text"]])
+
+        #test = batch["simple_text_0"]
+        test = [v for k,v in batch.items() if "valid" in k]
+        score = corpus_sari(batch["original_text"], predictions, test)
 
         return 1 - score / 100

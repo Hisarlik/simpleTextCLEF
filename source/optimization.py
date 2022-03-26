@@ -5,25 +5,16 @@ from pathlib import Path
 from dataclasses import dataclass, field
 
 import torch
-from pytorch_lightning import seed_everything
 import pytorch_lightning as pl
-from pytorch_lightning.callbacks import TQDMProgressBar
+from pytorch_lightning import seed_everything
 from easse.sari import corpus_sari
 
 from conf import OUTPUT_DIR
 from source.utils import logging_module, storage
 from source.data import SimplificationDataModule
-from source.model import T5SimplificationModel, LoggingCallback
+from source.model import T5SimplificationModel, LoggingCallback, LitProgressBar
 
 logger = logging_module.get_logger(__name__)
-
-
-class LitProgressBar(TQDMProgressBar):
-
-    def init_validation_tqdm(self):
-        bar = super().init_validation_tqdm()
-        bar.set_description('running validation ...')
-        return bar
 
 
 @dataclass
@@ -64,6 +55,7 @@ class Experiment:
                                      dataset: Path,
                                      features: Dict,
                                      stage: Optional[str]) -> SimplificationDataModule:
+        """Method to create a datamodule for training or testing the model"""
 
         dm = SimplificationDataModule(self.hparams.get("model_name"),
                                       dataset,
@@ -106,25 +98,22 @@ class Experiment:
 
         return trainer_conf
 
-    def get_metrics(self):
+    def get_metrics(self, dataset_path: Path):
 
-        dataset_path = self.hparams.get('dataset_path')
         results_path = self.hparams.get('experiment_path') / "test_results.txt"
 
-        original_sents_paths = []
-        simple_sents_paths = []
+        original_sents = []
+        simple_sents = []
 
-        for test_file in Path(dataset_path).glob("*.test.complex"):
-            original_sents_paths.append(test_file)
+        for test_file in Path(dataset_path).glob("*.test.complex*"):
+            original_sents = storage.load_file(test_file)
 
-        for test_file in Path(dataset_path).glob("*.test.simple"):
-            simple_sents_paths.append(test_file)
+        for test_file in Path(dataset_path).glob("*.test.simple*"):
+            test_text = storage.load_file(test_file)
+            simple_sents.append(test_text)
 
         test_results = storage.load_file(results_path)
-        originals_sents = storage.load_file(original_sents_paths[0])
-        simple_sents = storage.load_file(simple_sents_paths[0])
-
-        score = corpus_sari(originals_sents, test_results, [simple_sents])
+        score = corpus_sari(original_sents, test_results, simple_sents)
 
         logger.info(f"test SARI: {score}")
 

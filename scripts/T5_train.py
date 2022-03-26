@@ -1,14 +1,11 @@
 # -- fix path -- Source: https://github.com/KimChengSHEANG/TS_T5
 from pathlib import Path
 import sys
-from typing import Dict
-
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 # -- end fix path --
-
+from typing import Dict
 from source.optimization import ExperimentManager
-from source.utils import storage
-from conf import WIKILARGE_CHUNK_DATASET, DEVICE
+from conf import WIKILARGE_DATASET, WIKILARGE_CHUNK_DATASET, DEVICE
 
 
 def main(model_hyperparameters: Dict,
@@ -42,7 +39,7 @@ if __name__ == "__main__":
         model_name='t5-small',
         dataset_path=WIKILARGE_CHUNK_DATASET,
         number_epochs=1,
-        max_seq_length=32,
+        max_seq_length=256,
         learning_rate=3e-4,
         weight_decay=0.1,
         adam_epsilon=1e-8,

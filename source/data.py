@@ -1,4 +1,4 @@
-from typing import Optional, Dict
+from typing import Dict
 from pathlib import Path
 import re
 import collections
@@ -88,9 +88,8 @@ class SimplificationDataModule(LightningDataModule):
         return DataLoader(self.dataset["test"], batch_size=self.eval_batch_size, num_workers=1)
 
     def load_data(self):
-        """Loading dataset into Hugging Face DatasetDict """
+        """Loading dataset into Hugging Face DatasetDict. simple validation data can included multiple files."""
 
-        # TODO: Currently only supported one simple file. It has to be changed to support multiple files.
         if self.stage == "fit":
             train_original_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".train.complex"),
                                               sep="\t", header=None, names=["original_text"])
@@ -101,8 +100,8 @@ class SimplificationDataModule(LightningDataModule):
             valid_original_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".valid.complex"),
                                               sep="\t", header=None, names=["original_text"])
 
-            valid_simple_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".valid.simple"),
-                                            sep="\t", header=None, names=["simple_text"])
+            valid_simple_data = pd.concat([pd.read_csv(item, names=[item.name], sep="\t")
+                              for item in Path(self.data_path).glob("*.valid.simple*")], axis=1)
 
             train_data = pd.concat([train_original_data, train_simple_data], axis=1)
             valid_data = pd.concat([valid_original_data, valid_simple_data], axis=1)
@@ -124,49 +123,60 @@ class SimplificationDataModule(LightningDataModule):
         return dataset_created
 
     def _add_features(self):
+        """ Calculating features in selected dataset"""
 
-        for feature, kwargs in self.model_features.items():
-            logger.info(f"Calculating feature: {feature}")
-            self.dataset = self.dataset.map(getattr(features, feature)(self.stage, **kwargs).get_ratio)
+        # Selecting split.
+        for dataset_split in self.dataset.keys():
+            logger.info(f"Calculating split: {dataset_split}")
 
-            logger.info(f"Feature: {feature} calculated.")
+            # Calculating each feature using map function of Hugging Face dataset calling get_ratio method.
+            # dataset_split = "train", "valid" or "test".
+            # **kwargs = {"target_ratio"=value}
+            for feature, kwargs in self.model_features.items():
+                logger.info(f"Calculating feature: {feature}")
+                self.dataset[dataset_split] = self.dataset[dataset_split]. \
+                    map(getattr(features, feature)(dataset_split, **kwargs).get_ratio)
+                logger.info(f"Feature: {feature} calculated.")
 
+        # Joining features values with the original text
         self.dataset = self.dataset.map(lambda example: {'original_text_preprocessed':
                                                              "simplify: " +
                                                              example['original_text_preprocessed'] +
                                                              example['original_text']})
-        phase = next(iter(self.dataset.keys()))
-        print(phase)
-        logger.info(f"Example:{self.dataset[phase][0]}")
+
+        dataset_split = next(iter(self.dataset.keys()))
+        logger.info(f"Example:{self.dataset[dataset_split][0]}")
 
     def _tokenize_dataset(self):
 
         for split in self.dataset.keys():
             self.dataset[split] = self.dataset[split].map(
                 self._tokenize_batch,
+                fn_kwargs={"split": split},
                 batched=True
             )
         if self.stage == "fit":
 
-            columns = ["input_ids", "labels", "attention_mask", "target_mask"]
+                columns = ["input_ids", "labels", "attention_mask", "target_mask"]
 
-            self.dataset.set_format(type="torch", columns=columns, output_all_columns=True)
+                self.dataset["train"].set_format(type="torch", columns=columns, output_all_columns=True)
+                self.dataset["train"] =  self.dataset["train"].map(
+                        self._replace_pad_token_id)
 
-            for split in self.dataset.keys():
-                self.dataset[split] = self.dataset[split].map(
-                    self._replace_pad_token_id,
-                )
+                columns = ["input_ids", "attention_mask"]
+
+                self.dataset["valid"].set_format(type="torch", columns=columns, output_all_columns=True)
 
         else:
-            columns = ["input_ids", "attention_mask"]
+                columns = ["input_ids", "attention_mask"]
 
-            self.dataset.set_format(type="torch", columns=columns, output_all_columns=True)
+                self.dataset.set_format(type="torch", columns=columns, output_all_columns=True)
 
-    def _tokenize_batch(self, batch):
+    def _tokenize_batch(self, batch, split):
 
         input_encodings = self.tokenizer(batch["original_text_preprocessed"], max_length=256,
                                          truncation=True, padding="max_length")
-        if self.stage == "fit":
+        if split == "train":
             with self.tokenizer.as_target_tokenizer():
                 target_encodings = self.tokenizer(batch["simple_text"], max_length=256,
                                                   truncation=True, padding="max_length")
@@ -178,7 +188,7 @@ class SimplificationDataModule(LightningDataModule):
                     "labels": target_encodings["input_ids"],
                     "target_mask": target_encodings["attention_mask"]}
 
-        elif self.stage == "test":
+        else:
 
             return {"original_text": batch["original_text"],
                     "input_ids": input_encodings["input_ids"],
@@ -211,7 +221,7 @@ class SimplificationDataModule(LightningDataModule):
             for word in re.findall('[A-Z][^A-Z]*', feature):
                 if word: name += word[0]
             if not name: name = feature
-            preprocessed_name += name + "_"
+            preprocessed_name += name + str(self.model_features[feature]["target_ratio"]) + "__"
         preprocessed_name += str(len(self.model_features))
         path = PREPROCESSED_DIR / preprocessed_name
         return path

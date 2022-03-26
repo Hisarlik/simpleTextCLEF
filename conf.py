@@ -12,8 +12,8 @@ WORD_EMBEDDINGS_NAME = "glove.42B.300d"
 
 ##### WIKILARGE_CHUNK #####
 WIKILARGE_CHUNK_DATASET = DATASETS_DIR / "wikilarge_chunk"
+WIKILARGE_DATASET = DATASETS_DIR / "wikilarge"
 TURKCORPUS_DATASET = DATASETS_DIR / "turkcorpus"
-
 
 ##### T5 #####
 

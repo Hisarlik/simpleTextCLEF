@@ -10,7 +10,7 @@ from pathlib import Path
 
 from source.utils import storage
 from source.optimization import Experiment
-from conf import WIKILARGE_CHUNK_DATASET
+from conf import WIKILARGE_CHUNK_DATASET, TURKCORPUS_DATASET
 from source.optimization import ExperimentManager
 
 
@@ -24,7 +24,7 @@ def evaluate(experiment: Experiment,
     trainer = experiment.create_trainer()
     model = experiment.load_best_model()
     trainer.test(model, datamodule=dm)
-    experiment.get_metrics()
+    experiment.get_metrics(dataset)
 
 
 
@@ -41,4 +41,4 @@ if __name__ == "__main__":
     experiment_id = None
 
     experiment = ExperimentManager.load_experiment(experiment_id)
-    evaluate(experiment, WIKILARGE_CHUNK_DATASET, features)
+    evaluate(experiment, TURKCORPUS_DATASET, features)
