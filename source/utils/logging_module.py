@@ -33,5 +33,6 @@ def get_logger(name: str) -> logging.Logger:
 
     # add ch to logger
     logger.addHandler(ch)
+    logger.addHandler(fh)
 
     return logger
