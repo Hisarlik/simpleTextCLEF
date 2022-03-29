@@ -8,9 +8,8 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 from typing import Dict
 from pathlib import Path
 
-from source.utils import storage
 from source.optimization import Experiment
-from conf import WIKILARGE_CHUNK_DATASET, TURKCORPUS_DATASET
+from conf import WIKILARGE_CHUNK_DATASET, TURKCORPUS_DATASET, WIKILARGE_DATASET
 from source.optimization import ExperimentManager
 
 
@@ -31,8 +30,8 @@ def evaluate(experiment: Experiment,
 
 if __name__ == "__main__":
     features = dict(
-        WordLengthRatio=dict(target_ratio=1),
-        CharLengthRatio=dict(target_ratio=0.8),
+        WordLengthRatio=dict(target_ratio=0.9),
+        CharLengthRatio=dict(target_ratio=0.9),
         LevenshteinRatio=dict(target_ratio=0.8),
         DependencyTreeDepthRatio=dict(target_ratio=0.8),
         WordRankRatio=dict(target_ratio=0.8)

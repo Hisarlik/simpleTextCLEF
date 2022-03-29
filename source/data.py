@@ -230,5 +230,5 @@ class SimplificationDataModule(LightningDataModule):
             if not name: name = feature
             preprocessed_name += name + "_"
         preprocessed_name += str(len(self.model_features))
-        path = PREPROCESSED_DIR / preprocessed_name
+        path = PREPROCESSED_DIR / self.data_path.name / preprocessed_name
         return path
