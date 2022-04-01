@@ -3,6 +3,7 @@ from source.utils import logging_module
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import TQDMProgressBar
 import torch
+from pathlib import Path
 import pandas as pd
 from easse.sari import corpus_sari
 from transformers import (
@@ -34,14 +35,19 @@ class LoggingCallback(pl.Callback):
             if key not in ["log", "progress_bar"]:
                 logger.info("{} = {}\n".format(key, str(metrics[key])))
 
-    def on_test_end(self, trainer, pl_module):
-        logger.info("***** Test results *****")
-        path = pl_module.hparams.get('experiment_path') / "test_results.txt"
-        predictions = pl_module.predictions
-        if predictions:
-            storage.save_file(path, predictions)
-
-
+    # def on_test_end(self, trainer, pl_module):
+    #     logger.info("***** Test results *****")
+    #     model_features = trainer.datamodule.get_features_and_values_string()
+    #
+    #     # result path: Experiment + dataset name + features values + test_result
+    #     result_path = Path(pl_module.hparams.get('experiment_path') / \
+    #                        pl_module.hparams.get('dataset_path').name / \
+    #                        model_features / \
+    #                        "test_results.txt")
+    #
+    #     predictions = pl_module.predictions
+    #     if predictions:
+    #         storage.save_file(result_path, predictions)
 
 
 class T5SimplificationModel(pl.LightningModule):
@@ -88,8 +94,9 @@ class T5SimplificationModel(pl.LightningModule):
             decoder_attention_mask=batch['target_mask'],
         )
         loss = outputs.loss
-        #logger.info(f"train_loss: {loss}")
-        self.log('train_loss', loss, on_epoch=False, prog_bar=True, logger=True, batch_size=batch['input_ids'].size(dim=0))
+        # logger.info(f"train_loss: {loss}")
+        self.log('train_loss', loss, on_epoch=False, prog_bar=True, logger=True,
+                 batch_size=batch['input_ids'].size(dim=0))
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -163,9 +170,7 @@ class T5SimplificationModel(pl.LightningModule):
                                                   skip_special_tokens=True,
                                                   clean_up_tokenization_spaces=True)
 
-
-        #test = batch["simple_text_0"]
-        test = [v for k,v in batch.items() if "valid" in k]
+        test = [v for k, v in batch.items() if "valid" in k]
         score = corpus_sari(batch["original_text"], predictions, test)
 
         return 1 - score / 100

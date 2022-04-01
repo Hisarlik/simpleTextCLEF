@@ -98,9 +98,11 @@ class Experiment:
 
         return trainer_conf
 
-    def get_metrics(self, dataset_path: Path):
+    def get_metrics(self, model: pl.LightningModule, dm: SimplificationDataModule):
 
-        results_path = self.hparams.get('experiment_path') / "test_results.txt"
+        model_features = dm.get_features_and_values_string()
+        dataset_path = dm.data_path
+        predictions = model.predictions
 
         original_sents = []
         simple_sents = []
@@ -112,10 +114,18 @@ class Experiment:
             test_text = storage.load_file(test_file)
             simple_sents.append(test_text)
 
-        test_results = storage.load_file(results_path)
-        score = corpus_sari(original_sents, test_results, simple_sents)
+        score = corpus_sari(original_sents, predictions, simple_sents)
 
         logger.info(f"test SARI: {score}")
+
+        result_path = Path(self.experiment_path / \
+                           dataset_path.name / \
+                           model_features / \
+                           "test_results.txt")
+
+
+        if predictions:
+            storage.save_text_file(result_path, predictions)
 
 
 class ExperimentManager:

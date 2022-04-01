@@ -129,6 +129,17 @@ class SimplificationDataModule(LightningDataModule):
 
         return dataset_created
 
+    def get_features_and_values_string(self):
+        string_value = ""
+        for feature, target in self.model_features.items():
+            name = ""
+            for word in re.findall('[A-Z][^A-Z]*', feature):
+                if word: name += word[0]
+            if not name: name = feature
+            string_value += name + "_" + str(target['target_ratio'])
+        return string_value
+
+
     def _add_features(self):
         """ Calculating features in selected dataset"""
 
@@ -232,3 +243,5 @@ class SimplificationDataModule(LightningDataModule):
         preprocessed_name += str(len(self.model_features))
         path = PREPROCESSED_DIR / self.data_path.name / preprocessed_name
         return path
+
+

@@ -25,15 +25,15 @@ def load_file(path):
             texts.append(line.replace("\n", ""))
     return texts
 
-def save_file(path, texts):
-
+def save_text_file(path, texts):
+    path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, 'w', encoding="utf8") as f:
         for line in texts:
             f.write(line)
             f.write('\n')
 
 def yield_lines(filepath):
-    #filepath = Path(filepath)
+
     with filepath.open('r', encoding="latin-1") as f:
         for line in f:
             yield line.rstrip()

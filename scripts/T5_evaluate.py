@@ -9,7 +9,7 @@ from typing import Dict
 from pathlib import Path
 
 from source.optimization import Experiment
-from conf import WIKILARGE_CHUNK_DATASET, TURKCORPUS_DATASET, WIKILARGE_DATASET
+from conf import WIKILARGE_CHUNK_DATASET, TURKCORPUS_DATASET, WIKILARGE_DATASET, SIMPLETEXT_DATASET
 from source.optimization import ExperimentManager
 
 
@@ -23,21 +23,21 @@ def evaluate(experiment: Experiment,
     trainer = experiment.create_trainer()
     model = experiment.load_best_model()
     trainer.test(model, datamodule=dm)
-    experiment.get_metrics(dataset)
+    experiment.get_metrics(model, dm)
 
 
 
 
 if __name__ == "__main__":
     features = dict(
-        WordLengthRatio=dict(target_ratio=0.9),
-        CharLengthRatio=dict(target_ratio=0.9),
+        WordLengthRatio=dict(target_ratio=0.6),
+        CharLengthRatio=dict(target_ratio=0.5),
         LevenshteinRatio=dict(target_ratio=0.8),
         DependencyTreeDepthRatio=dict(target_ratio=0.8),
         WordRankRatio=dict(target_ratio=0.8)
     )
 
-    experiment_id = None
+    experiment_id = "20220326202929"
 
     experiment = ExperimentManager.load_experiment(experiment_id)
-    evaluate(experiment, TURKCORPUS_DATASET, features)
+    evaluate(experiment, SIMPLETEXT_DATASET, features)
