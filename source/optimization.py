@@ -115,18 +115,23 @@ class Experiment:
             simple_sents.append(test_text)
 
         score = corpus_sari(original_sents, predictions, simple_sents)
+        result_score = [f"Test SARI: {score}"]
 
-        logger.info(f"test SARI: {score}")
+        logger.info(result_score)
 
-        result_path = Path(self.experiment_path / \
-                           dataset_path.name / \
-                           model_features / \
-                           "test_results.txt")
+        result_text_path = Path(self.experiment_path / \
+                                dataset_path.name / \
+                                model_features / \
+                                "test_results.txt")
 
+        result_metrics_path = Path(self.experiment_path / \
+                                   dataset_path.name / \
+                                   model_features / \
+                                   "metrics.txt")
 
         if predictions:
-            storage.save_text_file(result_path, predictions)
-
+            storage.save_text_file(result_text_path, predictions)
+            storage.save_text_file(result_metrics_path, result_score)
 
 class ExperimentManager:
 
