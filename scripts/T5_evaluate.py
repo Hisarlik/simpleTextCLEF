@@ -34,10 +34,10 @@ if __name__ == "__main__":
         CharLengthRatio=dict(target_ratio=0.6),
         LevenshteinRatio=dict(target_ratio=0.8),
         DependencyTreeDepthRatio=dict(target_ratio=0.7),
-        WordRankRatio=dict(target_ratio=0.9)
+        WordRankRatio=dict(target_ratio=0.6)
     )
 
-    experiment_id = "20220404092551"
+    experiment_id = None
 
     experiment = ExperimentManager.load_experiment(experiment_id)
-    evaluate(experiment, SIMPLETEXT_DATASET, features)
+    evaluate(experiment, WIKILARGE_CHUNK_DATASET, features)
