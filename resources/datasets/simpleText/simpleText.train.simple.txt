@@ -1,0 +1,648 @@
+Current academic and industrial research is interested in autonomous vehicles.
+Drones are increasingly used in the civilian and commercial domain and need to be autonomous.
+Governments set guidelines on the operation ceiling of civil drones. So, road-tracking based navigation is attracting interest.
+Researchers propose data-driven solutions allowing drones to autonomously navigate city streets, learning to fly by imitating an expert pilot.
+The algorithm, based on the Inception model, detects roads using tomographic reconstructions. The Inception model is an extension of classic image classification algorithms.
+The Inception-v3 architecture has better accuracy than many existing models of imitation learning.
+The data used for training the system was captured from the drone over urban streets, navigated by an expert pilot.
+Data collection requires special permission to ensure pedestrian security.
+The drone can navigate successfully through roads without crashing or overshooting
+MAVNet computational efficiency enables the drone to fly up to 6m/sec.
+The solution is compared with other recent methods.
+If intelligent systems recognize traffic signs, it can reduce car accidents.
+For self-driving cars, we need automatic recognition of traffic and hand signs.
+Machine learning techniques  could be used to classify traffic signs.
+They perform well on a particular dataset, but fail on multiple traffic sign recognition test datasets.
+We proposed a new and better method.
+This model is based on enhanced convolutional neural networks (a deep-learning approach often used for image recognition).
+This model was more than 99% correct on German and Belgian sign recognition datasets.
+This new model is very low in both memory and computational complexity.
+Ignition is a neural network for training unconstrained self-driving vehicles in simulated environments.
+This ResNet-18 variant model receives images from the front of a simulated car and uses them to steer, throttle, or brake appropriately.
+The model is not explicitly trained to detect road features such as track outline or distance to other cars, as these features can automatically be calculated by the network.
+A transfer learning method to control self-driving cars is proposed, in which a convolutional neural network (CNN) is trained on one domain then used for the same task in a different domain.
+A conventional CNN is designed to map a single front-facing camera image to control a car.
+CNN produces a steering command and a lane departure level (LDL, mechanism designed to warn the driver when the vehicle begins to move out of its lane). To enable the transfer learning, a new task module takes the output of the last convolutional layer as input.
+The CNN trained on the source domain is then used to train the target network. It takes the output of the last convolutional layer of the source network and is trained to produce a steering command for the target domain.
+The steering commands from the source and target network are merged and used for car control in the target domain.
+Two simulators were used to evaluate the proposed method.
+The proposed method is more stable and safer for car control.
+Limited data available for training affects the use of deep learning techniques.
+Datasets are available for problems such as item recognition and classification for self-driving cars, but very limited for industrial robotics.
+A multi-objective Convolutional Neural Network (CNN) was first trained to identify the robot in the image and find 3D positions of the joints using just a 2D image. But this only used robots made by Universal Robots (UR).
+Here we work with a new robot arm - Kuka LBR iiwa which looks very different and has an additional joint.
+We collect a number of smaller datasets and use transfer learning techniques on the CNN trained on UR robots to adapt it to a robot that looks different.
+Transfer learning requires smaller training datasets, learns faster and reaches similar or even better accuracy.
+Moral responsibility is a major concern in automated decision-making, from self-driving cars to kidney transplants. ===========================================================================
+Queueing models are used for autonomous mobility-on-demand MOD systems. A queueing model is constructed so that queue lengths and waiting time can be predicted. In MOD systems,  robotic, self-driving vehicles transport customers within an urban environment and rebalance themselves to ensure quality of service.
+We first cast an autonomous MOD system within a closed Jackson network model,a class of queueing network, with passenger loss. ============================================================================
+A real-time rebalancing algorithm is applied to a case study of New York City. It is implemented on an eight-vehicle mobile robot testbed.
+The current taxi demand in Manhattan can be met with about 8,000 robotic vehicles. It represents roughly 70% of the size of the current taxi fleet in Manhattan.
+Congestion effects are also included to study the impact of autonomously rebalancing vehicles on overall traffic jams. ============================================================================
+This paper describes the sustainability benefits of robotic transportation networks.
+The on-going digital revolution will dramatically transform our economy and societal institutions.
+But this also presents risks for our society.
+Automation of society is coming.
+We must choose either between a society in which the actions are determined top-down by coercion or manipulative technologies (such as personalized ads) or in which decisions are taken freely and cooperatively.
+Modern information and communication systems (ICT) enable both, but the latter has economic and strategic benefits.
+Foundations of human dignity, autonomous decision-making, and democracies are weakening. These core principles of society and the basis of greater efficiency and success need to be defended.
+Once self-driving cars become reality and passengers no longer worry about it, they will need to find other forms of entertainment.
+However, high communication delay can slow retrieval of entertainment content from Data Centers (DC).
+Self-driving cars can use deep learning caching to address these challenges. It is deployed on the Multi-access Edge Computing (MEC) structure that moves services from a centralized cloud to the network edges and closer to the customer.
+Multi-Layer Perceptron (MLP), a type of artificial neural network, is used to predict the content requested in specific areas.
+To reduce delay, MLP outputs are sent to MEC servers for roadside units.
+A Convolutional Neural Network (CNN) is used to predict passengers’ age and gender to cache adapted entertainment content. =================================================================================
+The self-driving car can therefore identify the contents to be downloaded and cached.
+Deep learning caching is formulated for the self-driving car to enhance entertainment services and minimize content downloading delay.
+A Block Successive Majorization-Minimization (BS-MM) technique solves the problem.
+Prediction accuracy was 98.04% for contents to be cached for self-driving cars. Such an approach can minimize delay.
+This paper describes the Bristol Stock Exchange (BSE), a minimal simulation of a centralised financial market based on a Limit Order Book (LOB), a type of order to buy or sell a security at a specific price or better.
+BSE was built because most of the financial markets became automated.
+Research tries to understand the dynamics of this automated financial markets but
+Trainee engineers also need a realistic learning experience to build automated trading systems.
+BSE has been successfully used for both teaching and research since 2012. BSE code is freely available on GitHuB.
+This paper studies how stock prices vary with financial disclosures.
+We particularly study the many uncategorized filings.
+We use latent Dirichlet allocation for topic modeling.
+This helps automatically predict the categories based on the content of 70,000 regulatory 8-K filings from U.S. companies, which announce significant events relevant to shareholders.
+We then evaluate the stock market reaction.
+Evidence suggests a large difference among types of news stories in relevance and impact on financial markets.
+For example, we find unusual returns in response to disclosures about earnings results, credit rating, business strategy, the health sector, mergers and acquisitions.
+Our results are useful for managers, investors and policy-makers. They show how to structure regulatory filings and which topics influence stock valuations.
+This paper addresses problems of trading systems in banking. ==============================================================================
+Modern computing allows cross-regional trading transactions within milliseconds.
+We then discuss how a trading system fits in with the bank ecosystem. ==============================================================================
+Internal noise generated by motors, fans and mechanical components severely decreases speech recognition accuracy, when the humanoid robot is moving or shaking its body.
+This paper presents a novel speech recognition system robust to ego-noise for humanoid robots. On/off state of the motor is used to find relevant input features.
+Bottleneck features have been successfully applied to automatic speech recognition (ASR) systems based on deep neural networks (DNN).
+The motor on/off state data and acoustic features are used as the input of the first deep neural network (DNN) for preliminary acoustic modeling.
+The second DNN for primary acoustic modeling uses both bottleneck features from the first DNN and acoustic ones.
+The proposed method is evaluated in terms of phoneme error rate (PER) on TIMIT database, experimental results show that improvement (11% relative) is achieved by our algorithm over the conventional systems.
+Model based techniques exist to apply domestic service tasks on humanoid robots, such as teleoperation, learning from demonstration and imitation.
+Sensor based robot control overcomes difficulties of uncertain models and unknown environments.
+Interaction between the robot and its environment using the sensor based control is important.
+Social media give users opportunities to interact with different opinions.
+But misinformation is spread via social media because individuals can search for information that confirms their beliefs and personalized news algorithms may supply it.
+Theoretical understanding of the balance between opportunities and misinformation is incomplete.
+We introduce a stylized social learning model. In this model, most participants in a network update their beliefs based on new information, while others show confirmation bias and can reject news that differs from their beliefs.
+This simple confirmation bias mechanism can create lasting opinion polarisation.
+Besides, in the model, unbiased people behave “as if” biased because biased neighbours limit their access to diverse information.
+With our model, we show the trade-off between confirmation bias and social connectivity. We validated the model using the data on how internet access influences beliefs on global warming.
+Small confirmation bias may even improve accuracy across individuals by keeping information diversity in a social network.
+But large confirmation bias lowers accuracy as biased individuals limit information flow to others.
+We discuss the meaning of our model for policy and the downsides of myth-busting We suggest alternatives to fight misinformation.
+The WWW changed the ways we can produce and access information.
+Users tend to select information that agrees with their beliefs. They form polarized groups of like-minded people sharing narratives that ignore contradicting information.
+Here, users reinforce their shared narratives and can resist debunking
+This is the case with online news. Because 63% of users access news from social media, polarization could increase misinfomation spread.
+We focus on polarisation of Facebook news consumers in different European countries.
+Posting, liking and commenting rates differ across countries.
+We look at how users interact with different pages and polarized communities form around specific pages.
+Italy is the most polarized country, then France, Germany and Spain.
+A variant of the Bounded Confidence Model simulates the emergence of these communities by considering user engagement and trust in the news.
+Trust in an information source plays a major role against polarization of users online.
+In decentralised P2P networks nodes need a way  to control resource usage and prevent flooding and denial-of-service attacks.
+We compared different approaches to decentralised resource control in cryptocurrency projects.
+We designed a decentralised exchange for crypto assets, for  example Namecoin names, with these methods.
+Memory-bound cryptocurrencies like Monero can be mined  from a browser with JavaScript, better than with a dedicated rig.
+However, this technology enables cryptojacking, whereby a site covertly mines for cryptocurrencies on its visitors’ computers.
+We propose a new approach to identify mining scripts. The approach was evaluated on Alexa 1 websites.
+Cryptojacking is common, as 1 in 500 sites host a mining script.
+We also measured code characteristics, estimated mining revenue, and evaluated blacklist-based countermeasures.
+Smart contracts have appeared thanks to blockchain technology.
+These autonomous programs are used in law, business, commerce, and governance. Smart contracts are written in a high-level language such as Ethereum’s Solidity and translated to bytecode. that live and run on the blockchain are predicted in
+Once deployed on the blockchain, the bytecode is autonomous.
+Smart contracts are vulnerable to malicious attacks due to poor programming, languages and toolchains
+Smart contracts can command large amounts of cryptocurrency.
+Developers and auditors need frameworks to detect security vulnerabilities.
+Vandal is a security analysis framework for Ethereum smart contracts.
+Vandal converts Ethereum Virtual Machine bytecode to semantic logic relations.
+Users can express security analyses in the Soufflé language.
+Vandal is both efficient (95% accuracy), fast (141k in 4.15 s) and robust. It outperforms the state of the art tools like Oyente, EthIR, Mythril, and Rattle
+One of the most powerful potential adversaries is the country of China, which has expressed adversarial positions regarding the cryptocurrency and demonstrated powerful capabilities to influence it.
+Image tampering has become a serious problem with the advancement of digital techniques.
+JPEG images can be easily manipulated without leaving any clues. This is why researchers are trying to develop methods for JPEG image manipulation detection.
+However, methods based on image compression techniques, like quantization, are rarely applied.
+To detect such manipulations, we propose a detection method to identify inconsistencies in the quantization matrix caused by the manipulation.
+Then machine learning algorithms are applied to detect image manipulation.
+Experimental results show that the approach is highly effective in detecting image tampering.
+Machine timestamp falsification can be used in cyber attacks.
+That is why it is important to detect such changes and to reconstruct the actual timeline of events.
+However, the hacker can try to hide their tracks.
+In cloud computing, hackers can manipulate host and guest machine time.
+Guest virtual machines use computing resources provided by a physical machine called a host. Guest virtual machines are especially vulnerable to attacks coming from their host.
+That is why the timeline integrity of both hosts and guests in a cloud is important. Any manipulation of such a timeline should be detected.
+In this paper we survey the issues related to host and guest machine time integrity in the cloud.
+A new algorithm is proposed to detect host and guest time manipulations and to correct or reject them.
+A simulator has been built for this purpose.
+The algorithm detects manipulations effectively.
+Detection of image editing is an important task in image forensics.
+The edit history of an image can expose forgeries in the image.
+Various methods have been proposed to detect image editing operations.
+However all of the possible types of image manipulation must be known in advance.
+But, in the real world, manipulations on images are sometimes unknowable.
+A novel deep learning-based method can distinguish between different types of image editing operations.
+This method uses a deep siamese neural network to compare images two by two.
+Using deep learning, the computer can learn to see features of edited images as compared to unedited and learn to differentiate between different image editing operations.
+This method works to find out what editing an image has undergone.
+Digital assistants are becoming popular in our daily lives. It will allow users to do multiple tasks in a faster way.
+DIANE is a digital assistant system that allows the doctor a faster access patient and hospital information. This could be done with face recognition and live streaming.
+Research showed that people suffer from diverse biases (disproportionate weight in favor of or against an idea) in decision-making.
+We analyzed the effects of decision-making biases of managers on organizational performance.
+In the simulations, managers decisions which are based on organizational skills and rules, suffer from several known biases.
+The results illustrate how combined biases in different contexts affect organizational performance.
+Contrary to expectations, some combinations of biases improve organizational performance. However, when they occur separately, they decrease performance.
+This raises questions about the importance of rationality in decision-making.
+Perception of the environment is necessary for mobile robots to navigate safely in dynamic environments.
+Most robots (humanoids and wheeled robots) rely on planar regions.
+For humanoids (robots with human form or characteristics), a 2D map is not sufficient because they can step over and onto objects, so they need height information.
+Dynamic obstacles bring another level of complexity, because it can lead to necessary replanning or collisions.
+In this paper, we present a framework that extracts planar regions in height maps and detects dynamic obstacles.
+Our system then uses this information to create a set of prediction maps, in which paths can be planned in real time at low processor cost.
+We show in simulation and real-world experiments that our framework keeps run times well under 10ms and allows for real-time 3D footstep planning.
+An autonomous service robot often first has to search for a user to execute a task.
+This is a challenging problem, especially when this person moves around because the robot’s field of view is limited. The environment also poses visibility limitations that influence the perception of the user.
+In this paper, we propose a method that estimate the user’s observability in the environment.
+When estimating effective search locations, we take into account the time for the robot to reach the search location and the visibility limitations.
+In this way, the robot can choose the next search location that has the maximum expected observability of the user.
+Our experiments demonstrate that our approach leads to a significantly shorter search time compared to other approach.
+In many situations, users walk on typical paths between specific destinations at which the service of a mobile robot is needed.
+Depending on the environment and the paths, following the human might not be the optimal solution because better paths for the robot exist.
+We propose to predict the human’s future movements and use this information to generate navigation actions for the robot.
+The estimation of the human’s position and the prediction of the next destination are uncertain because of the occlusions due to obstacles and the robot’s limited field of view.
+Our approach deals with considering occlusions so the robot automatically considers to execute actions to get the human in its field of view.
+We show that our technique leads to significantly shorter paths compared to an approach in which the robot follows the user and, additionally, can handle occlusions.
+In this paper, we introduce an approach for robot to navigate through cluttered indoor environments.
+We propose to estimate obstacles based on already detected objects and use them to predict potential obstacles in regions not yet observable by the robot.
+The robot is then able to navigate in a more anticipated manner and reduces the risk of getting stuck.
+Our method enables the robot to efficiently navigate through cluttered environments and faster than a standard approach not using any prediction.
+In this paper, we present a navigation system that allows humanoid robots (robots with human form or characteristics) to autonomously navigate in unknown, cluttered environments.
+From the data of a camera which can judge depth and distance, our system estimates the robot’s position and maintains a height representation of the environment.
+Our system determines safe actions (including footsteps and body motions) leading the robot to target locations.
+To efficiently check for collisions during planning, we developed a new approach that takes into account the shape of the robot and the obstacles.
+As we demonstrate in experiments, our system allows the robot to navigate in clustered environments and traverse challenging passages.
+In this paper, we present a novel approach to accurately calibrate a humanoid and its motions (robot with human form or characteristics) based on observations of its camera.
+Our technique estimates the parameters of the complete model, consisting of the joint angle offsets and the camera parameters.
+We developed an approach to automatically select configurations for the calibration process that produces a good compromise between the number of observations and accuracy.
+Our approach to configuration selection generates better optimization results compared to randomly chosen viable configurations.
+Thus, our system only requires a reduced number of configurations to achieve accurate results.
+Our optimization is general and the implementation, which is available online, can easily be applied to different humanoids.
+In this paper, a concept of lab automation drone is introduced.
+Here, a robotic arm is attached to a drone.
+The arm’s gripper allows the drone to manipulate objects such as chips and test tubes often used in scientific experimentations like high throughput systems.
+The drone could augment existing high throughput systems operations.
+The 6 degree-of-freedom arm and gripper design are presented.
+Results of evaluations and tests are also given.
+Robot companionship has become more popular in past years.
+However, humanoid (robots with human form or characteristics) walking might be unstable.
+Even with miniature humanoids, falls occur frequently.
+Wheels have been added onto a miniature humanoid, so it can move faster and with more stability than walking.
+With wheels, a robot can switch from walking to rolling when necessary.
+DARwIn-OP is a humanoid robot that has been used for experimentation and evaluation.
+This paper discusses preliminary work for robot companionship applications by using a miniature humanoid capable of fetching different toys based on voice command.
+Advances in technology allowed drones to be used for surveillance, video recording, operations, entertainment/advertising, signal emission, transportation, and delivery.
+These applications and services require video recording.
+Large drones are used individually while small ones are used in groups.
+The small drones are proving to be useful in civilian applications.
+Consideration of small drones for the applications such as group flight, entertainment, and signal emission lead to deployment of networked drones.
+To develop group display applications, a real-time drone formation control for group display is proposed.
+Simulation shows that drone formation can display messages effectively.
+The development of the Internet and mobile technology in recent decades has modified our living styles and daily habits.
+More business activities have been engaged in the digital world.
+Marketing and advertising is one of typical business areas that is transformed digitally.
+Many businesses consider the adoption of digital marketing tools for their promotion and advertisement, due to the rise of Key Opinion Leaders (person with expert status and influence), social media platforms, and Omni-channel retailing (multiple channels but a uniform experience for the customer).
+However, with the increasing diversity of digital marketing tools, they must be carefully selected.
+In this paper, a method to organize and analyze complex decisions is proposed and developed for assisting businesses to evaluate and select appropriate digital marketing tools.
+The developed method rationalizes and simplifies the process of digital marketing tool selection. It also increases effectiveness of achieving strategic marketing objectives.
+This study focuses on the digital marketing capabilities of tourism small and medium-sized enterprises (SMEs).
+The study questions on how information and communication technology (ICT) tools can help the organisational capabilities of a company.
+The study provides new insights from tourism studies on digital marketing.
+Findings show that digital marketing capabilities of companies are transformed by ICT tools.
+Four major capabilities were identified, each of which evolves as a result of using the tools.
+A key finding of the study is that ICT tools transform these capabilities in a set of abilities for SMEs in web-marketing.
+Big data (the ability to collect, store and analyze huge quantities of data in a really fast and cheap way) offers immense benefits in marketing, healthcare, environment, national security and more.
+The principles of privacy, limitation of data collection and use are stretched by the business and technological reality of big data.
+Our increasing interactions with these technologies without human supervision, and their growing autonomy, functionality and behavior raises legal and philosophical questions.
+The focus on the machine is a distraction from the debate on ethical dilemmas about data like privacy, fairness and discrimination.
+The machine may influence the ethical challenges, but the humans must remain responsible.
+Responsible people should find guidelines for ethical data analysis and collection.
+These guidelines would deal with mechanisms to protect data, criteria about unethical or illegal behavior, privacy harms, and strategies to give people access to data.
+Smart speakers are becoming popular around the world and people will get used to this new way of interacting with the voice.
+Even with the progress of speech recognition and natural language processing (interactions between computers and human language), users may still get errors like “cannot understand” or “no requested audio resource” which can frustrate users.
+So, it is important that the smart speaker gives an effective and proper response during an error message.
+The responses of the most popular brand of smart speakers are based on 2 elements, apology and humor.
+We studied user’s preference in two error scenarios : “cannot understand” and “no requested resource”
+Satisfaction of the user and perceived sincerity of the response were measured.
+The results showed that users were more satisfied and perceived higher sincerity when smart speaker apologized in both error scenarios.
+In the “no requested audio resource” scenario, humor had no impact on the satisfaction or sincerity.
+But in the “cannot understand” scenario, humor decreased perceived sincerity.
+The smart speakers cannot differentiate between human voice and machine voice.
+A method to identify if the voice command is from a human or a machine is required.
+We propose a system composed of a speaker and microphones to detect the presence of humans. It could help to prevent attacks on a smart speaker with a machine voice in absence of residents
+The VUIs (voice user interface) like Amazon’s Echo or Apple’s Siri are popular nowadays. However, they have limited language options for users.
+We studied the usability of the Google Home Smart Speaker with native and non-native English speakers to understand their differences in using this device.
+The results show that the native English speakers had a better experience with the device than the non-native.
+It also shows that language skills play an important role.
+The results of this study can help VUI developers for improving language options and voice recognition in the devices.
+A pharmacophore analysis investigated and compared different compounds of the drug discovery process.
+Significant differences were observed between the pharmacophore profiles of the drug molecules and the high-throughput screening compounds, which appear to be related to the nondrug pharmacophore distribution.
+It is suggested that the analysis could be used as an additional tool for the optimization of compound selection and library design processes..
+Annotation of bioassay protocols with web vocabulary can make experiment descriptions machine-readable.
+Protocols use concise scientific English which prevents most of analysis by software algorithms.
+There is a sufficient ontology, so the pertinent information can be written using semantic web triples (subject, predicate, object).
+With appropriate annotation, assays can be searched, clustered, tagged and evaluated.
+The BioAssay Ontology (BAO) has been designed for this purpose, and provides many meaningful terms.
+Next generation sequencing (NGS) produces datasets of billions of reads and thousands of samples.
+The analysis is typically done with open source tools, performing a single step towards the final result.
+The bioinformaticians have to combine the tools, manage the files and information, document the analysis, and ensure reproducibility.
+SPSS Clementinel2.0 statistical software was used to extract data and find relations between traditional Chinese medicine and other medicine.
+The classic Apriori algorithm is useful to find cases of influenza treated by old Chinese medicine.
+Identifying bacterias that are resistant to antimicrobial in samples of genetic material collected from the environment is essential for public health and food safety.
+Next-generation sequencing (NGS) technology has provided a powerful tool in identifying the genetic variation and constructing the correlations between genotype (genetic code of an individual) and phenotype (physical characteristics of an indvidual) in humans and other species.
+The Genetic Polymorphism Assignements (GPA) is a framework which determines the genetic constitution of multiple bacteria while reducing the number of false positive results and improving the accuracy of calculations when identifying the variation of a single nucleotide.
+CRISPR-Cas is a tool used for gene editing.
+However, unintended genetic modifications may occur.
+Anti-CRISPR proteins (molecules that inhibit the CRISPR-Cas system) may improve utilization of the CRISPR-Cas system in gene editing, especially for gene therapy.
+More research on these proteins would help to understand the co-evolution of bacteria and bacteriophages (virus that infects and replicates within bacteria).
+It is necessary to collect and integrate data on various types of anti-CRISPRs.
+The CRISPR/Cas9 system is a powerful technology for gene editing and gene regulation.
+These applications require the design of single guide RNAs (which are enzymes that can delete, insert or alter DNA) that are efficient and specific.
+However, this remains challenging, as it requires the consideration of many criteria.
+CRISPR is a popular research area known for its efficiency and specificity in editing DNA sequences.
+A variety of gene editing techniques have been developed for different aims.
+The target locations of a DNA strain can be precisely broken and repaired, during which the genes can be removed, repaired, silenced, or activated.
+The high efficiency of CRISPR/Cas9 reagents preparation and the easiness of experiment conduction make it a powerful tool.
+Gene editing could be used to solve issues related to health care allocation.
+Improving the health of future generations might coincide with public health goals.
+However, enhancing future generations will require In Vitro Fertilisation (IVF) and Pre-implantation Genetic Diagnosis.
+The necessary involvement of women in an enhancing scenario has not been discussed.
+The discourse on moral obligations of future generations seems to imply that women might be required to reproduce with IVF.
+Enhancing future generations will be gendered, unless the artificial womb is developed.
+These are challenging issues that require a wider perspective, of both women and men.
+There are no unified feminist conclusion about the merits and risks of human genome modification. There is also an urgent need to clarify the role of women in this scenario.
+The CRISPR-Cpf1 system (a DNA-editing technology) has been successfully applied in gene editing.
+However target efficiency of the CRISPR-Cpf1 system varies among different gRNA (piece of RNA that serves as a guide to DNA-targeting enzymes) sequences.
+Using machine learning technology, a support-vector machine model (algorithm used for data classification) was created to predict the target efficiency for any given gRNAs.
+CRISPR-DT (CRISPR DNA Targeting) is available. It is the first web service application to help users design optimal gRNAs for the CRISPR-Cpf1 system by considering both target efficiency and target specificity (recognition mecanism).
+A key problem for autonomous car navigation is the understanding of the environment while driving.
+It needs to extract information from the sensors and cameras and classify the elements into categories so it can be easily analysed (streets, buildings, pedestrians, vehicles, signs, etc.).
+A method is to fuse 3D map data with classification of the sensors and cameras.
+This system combine image segmentation (simplify the representation of an image to facilitate its analysis) and information obtained from sensors and cameras while integrating prior information.
+This approach was tested on manually entered data in urban environments.
+The results show that the classification of elements is more accurate with this method than the image segmentation alone.
+Self-driving vehicles have become common on public roads, with the promise of a safe and efficient mode of transport.
+To be reliable, these vehicles need many software tests on simulators with interactions of multiple vehicles and pedestrians.
+It is essential that self-driving software is evaluated with many different challenging driving scenarios.
+The driving scenario generation still needs human contribution.
+We propose to automate the process and generate conflicting self-driving that expose weaknesses of self-driving policies, and increase the risk of collision with simulated pedestrians and vehicles.
+By incorporating the generated scenarios into the parameters of the self-driving policy, and by adjusting the policy with the imitation learning, we obtain safer self-driving behavior.
+Self-driving technology is developing, more and more driverless vehicles are launched in market and accessible for people in their daily life.
+So there is a growing demand for the autopilot experience.
+Natural and efficient human-computer interaction can improve the driving experience and accelerate the process of self-driving commercialization.
+This paper discusses interactions with the eye, voice and gesture in self-driving car, analyzes the technology, the interaction modes, and considers the future of self-driving human-computer interaction.
+Self-driving vehicle technologies are progressing and are expected to play a significant role in the future of transportation.
+A main challenge for self-driving vehicles on public roads is the safe cooperation, collaboration and communication with other vehicles.
+When self-driving vehicles are in the same area, they might collide, become blocked, or suddenly brake and make uncomfortable or unsafe the passengers.
+We study how a self-driving vehicle can safely navigate merge points, where two lanes with different priorities meet.
+We present a safe protocol where self-driving vehicles use both vehicular communications and their own perception systems for cooperating with other vehicles (self-driving or human-driven).
+Our simulation results show that our traffic protocol leads to a better traffic flow, while ensuring safety.
+Self-driving vehicles are vulnerable to different attacks because of their communication systems.
+These vehicles use external communication via a network.
+This network add new threats to self-driving vehicles that contribute to the challenges in autonomous systems.
+With these communication systems, self-driving vehicles are vulnerable to many types of malicious attacks on the network.
+In this paper, we propose an intelligent security system to secure external communications for self-driving cars.
+The system will detect a common type of attack in the network: Denial-of-Service (attack trying to make network resource unavailable).
+The results show that the intrusion detection system is capable of identifying malicious vehicles in self-driving vehicles.
+This paper proposes MATLAB/Simulink tests for an open-source self-driving system based on Robot Operating System.
+One approach to the development of self-driving systems is the utilization of Robot Operating System (open-source software framework used in the development of robot applications).
+But the popular approach in the automotive industry is the utilization of MATLAB/Simulink (software for modeling, simulating, and analyzing).
+MATLAB/Simulink provides an interface that enables to create functionalities of robots (based on robot operating system).
+However, it is not fully utilized in the development of self-driving systems yet because there are not enough samples, and it is difficult for developers to adopt co-development.
+We provide MATLAB/Simulink tests for a self-driving system (based on robot operating system) called Autoware.
+Autoware is a popular open-source software that provides a complete set of self-driving modules.
+The provided tests contain MATLAB/Simulink samples available in Autoware.
+They help to design self-driving systems (based on robot operating system) using MATLAB/Simulink.
+Ensuring the safety of self-driving cars is important, but there is no standard way to test them.
+Testing self-driving cars in regular traffic is costly and risky, and has already caused fatalities.
+As a safer alternative, virtual tests (self-driving car software tested in computer simulations) have been proposed.
+To cover the huge number of possible driving situations, self-driving cars must be tested in manually created tests.
+We developed AsFault, a tool for automatically generating virtual tests for testing self-driving car software.
+We demonstrate AsFault by testing the lane keeping feature of a self-driving car software with scenarios going off the road.
+A video illustrating AsFault in action is available at: https://youtu.be/lJ1sa42VLDw
+Little is known about how potential users perceive self-driving vehicles.
+This is especially true for self-driving vehicles in public transport services.
+In this study, the preferences between a trip in a self-driving bus and a regular bus were compared.
+The results of 282 participants were studied, including trust in self-driving vehicles and interest in technology.
+The results show that currently public transport passengers prefer the self-driving bus over the regular bus only for short trips.
+The preference is about twice as high for the self-driving bus as for the regular bus for a short commuting trip.
+The popularity of self-driving busses decreases with the presence of a human steward on-board, or if they are operated as a demand-responsive service with fixed routes.
+People who currently show a strong interest in technology or trust in automated vehicle technology perceive the self-driving busses better than others.
+Preferences for automated public transport services are expected to evolve with their deployment in regular operations.
+The management of self-driving systems is becoming more complex as the development of self-driving technology progresses.
+Self-driving systems use Robot Operating System (open-source software framework used in the development of robot applications). However, in the automotive industry, the system is designed using MATLAB/Simulink, which can simulate and evaluate the models used for self-driving.
+These models are incompatible with systems based on Robot Operating System.
+To use both, it is necessary to incorporate new code into the system based on Robot Operating System, which makes development inefficient.
+Therefore, the proposed framework allows models created using MATLAB/Simulink to be used in a self-driving system, which improve development efficiency.
+Furthermore, our evaluations of the proposed framework demonstrated its practical potential.
+Social media have become popular means of information sharing.
+The spread of news regarding emergency events is common in social media but so is the spread of misinformation.
+Misinformation is any false or inaccurate information that is spread intentionally or not.
+In this paper we study the problem of misinformation identification in social media, and we focus in particular on Twitter.
+We build a misinformation detection model that identifies suspicious behavioral patterns and detect misinformation.
+We found 80294 unique tweets and 59660 users. It illustrates that our approach identifies misinformation during emergencies.
+Our model manages to timely identify misinformation, it can be used to limit the spread of the misinformation.
+Superintelligence is a potential future artificial intelligence (AI) significantly more intelligent than humans.
+Superintelligence could be a major event, with potential consequences that are beneficial or catastrophic.
+The prospect of superintelligence is the subject of major debate, which includes a lot of misinformation.
+Superintelligence misinformation could be dangerous, and lead to bad decisions by the people that could work on the project.
+This paper searches for strategies to counter superintelligence misinformation.
+Two strategies are examined: to prevent the spread of misinformation and to correct it after it has spread.
+Misinformation can be difficult to correct, so preventing it seems to be the best strategy.
+The strategies proposed can be used to bring public attention to superintelligence, AI education programs, and efforts to build expert consensus.
+The online misinformation could cause public panic and serious economic damages.
+The goal of misinformation containment is to limit the spread of misinformation in online social networks by launching campaigns to counter misinformation.
+We present the first analysis of the misinformation containment problem with a random number of cascades (people observe the actions of others and then make the same choice) allowed.
+First, we provide a diffusion model and introduce an important concept called as cascade priority.
+Second, we show that the misinformation containment problem cannot be approximated within a factor of Ω(2log1−ϵn4) in polynomial time unless $NP \subseteq DTIME(n^{\polylog{n}})$
+Third, we introduce several types of cascade priority that are frequently seen in social networks.
+Finally, we design algorithms for solving the misinformation containment problem.
+The proposed algorithm is effective and shows encouraging results.
+Inaccurate information is often regarded as a problem that needs to be corrected or simply understood as misinformation or disinformation without further consideration.
+Misinformation and disinformation may cause problems online because users are constantly exposed to inaccurate and/or false information.
+This paper aims to establish preliminary work for future research by examining the relationships among information, misinformation, and disinformation.
+Our analysis extends to a discussion of means for detecting misinformation and disinformation.
+We argue that misinformation and disinformation are related but distinct sub-categories of information.
+Misinformation is more complex than simply being inaccurate or incomplete, and disinformation does not always involve misinformation.
+The growth of social media leads to better communication between people, but also propagation of misinformation.
+The wide spread of misinformation over social media have bad consequences for public interest.
+We design a framework to help identify misinformation.
+The idea is to index the expertise of users and to match the experts with given suspected misinformation.
+By sending the suspected misinformation to appropriate experts, they can judge the credibility of information, and help refute misinformation.
+In this paper, we focus on finding appropriate experts for misinformation identification.
+We propose a method to index the expertise of users with tags.
+Experiments on a real world dataset demonstrate the effectiveness of our method for expert finding for misinformation identification.
+The importance of research on misinformation has received wide recognition.
+Two major challenges faced by this research community are the lack of theoretical models and the rare misinformation data.
+This paper aims to address these challenges by conceptualizing misinformation and being able to completely understand and work on misinformation.
+A representation and a model of misinformation are proposed through existing work in the field.
+The model can guide future misinformation research and help building a digital misinformation library by advancing our knowledge on misinformation and by improving its sharing, management, and reuse.
+In addition, we present a methodology for managing misinformation in a digital library, and suggest future research directions.
+Conspiracy theories have gained much attention recently, due to their large impact on public events.
+Little is known about how conspiracy theories are produced and developed on social media.
+We present a study of conspiracy theory creation on Reddit during a public health crisis.
+Using content and discourse analysis, we identified types of conspiracy theories that appeared on Reddit in response to the crisis, the conditions of their creation, and the strategies of their development in online forums.
+Our analysis shows that conspiracy talk come from people trying to make sense of a public health crisis, which reflect their information needs and their lack of confidence in formal sources of information.
+Implications for social computing researchers, health practitioners, and policymakers are discussed.
+Conspiracy theories are omnipresent in online discussions.
+Conspiracy theories evolve, multiply, and interconnect, complicating how to understand them and to limit their propagation.
+It is crucial to develop methods to examine the nature of these conspiratorial discussions.
+What do users talk about? What are the recurring elements in their discussions? What do these elements tell us about the way users think? This work answers these questions by analyzing over ten years of discussions in an online community on the social media Reddit dedicated to conspiratorial discussions.
+We focus on the key elements of a conspiracy theory: the conspiratorial agents, the actions they perform, and their targets.
+For example, a narrative-motif (an idea) such as "governmental agency-controls-communications" represents the various ways in which multiple conspiratorial statements suggest how governmental agencies control information.
+Narrative-motifs expose similarities between multiple conspiracy theories even when they refer to different events or circumstances.
+These representations help us understand how users talk about conspiracy theories and offer us a means to interpret what they talk about.
+Our approach enables a population-scale study of conspiracy theories in alternative news and social media and ways to understand them and limit their propagation.
+To believe in conspiracy theories is understandable as conspiracies occur and if we take an evidential approach, belief in such theories turns out to be warranted in a range of cases.
+Drawing on this work, I examine evidence associated with conspiracy theories, showing that the evidential problems are not unique to conspiracy theories.
+The problem with the use of evidence of conspiracy theorist could be the principle which guides their use of it. I argue that there is no ground to be suspicious of conspiracy theories as a whole, because those are based on evidence.
+Cryptocurrency is a financial technology innovation which has attracted many people around the world.
+The high-speed evolution, radical price fluctuations of cryptocurrency, and the inconsistent attitudes of monetary authorities in different countries have caused panic.
+In this paper, we analyze the dynamics and risks of the cryptocurrency market.
+Consistent with public perception, our analysis reveals that the cryptocurrency market is fragile and unstable.
+Blockchain technology is a technology developed for Bitcoin, the most common cryptocurrency.
+Blockchain technologies have become popular with the potential to become a powerful disruptive force.
+People and organizations may use it to increase secure data exchange and make transactions simpler and easier.
+We investigate what influence people to use a blockchain cryptocurrency.
+We develop a model of cryptocurrency adoption to identify how cryptocurrency is accepted.
+Our evidence allow a better understanding of cryptocurrency adoption.
+Cryptocurrency was initially an implementation of digital currency, then derivatives were created in various fields.
+This paper aims to help understand cryptocurrency.
+We compared cryptocurrency with foreign exchange and stock.
+Our investigation suggests that cryptocurrency is similar to stock.
+Our analysis shows that cryptocurrency market is more fragile than stock market, thus it is currently a high-risk financial market.
+The owning rate of smart devices is higher than ever before and mobile payment has become a major payment method.
+Cryptocurrency is becoming an important type of currency and the total value of cryptocurrencies has reached USD 200 billion.
+Therefore, support of cryptocurrency payment on mobile devices is a natural demand.
+Considering the poor infrastructure and the low usage of financial service in developing countries, this combination is especially attractive.
+The high storage cost and payment processing latency are two obstacles for cryptocurrency mobile payment.
+We propose two solutions, one with a centralized bank and the other one without any centralized party.
+We also provide a solution for the bank to meet KYC (know your customer)/AML (antimoney laundering) expectations about cryptocurrency mobile payment.
+Motivated by recent financial crises, research efforts have been put into studying contagion effects (spread of market disturbances) and herding behaviour (individuals acting collectively without centralized direction) in financial markets.
+Much less has been said about influence of financial news on financial markets.
+We propose a measure of collective behaviour in financial news on the Web, News Cohesiveness Index (NCI), and show that it can be used as a systemic risk indicator, which signals probability of financial system crises.
+We evaluate the NCI on financial documents from Web news sources and analyse the relation between financial markets and financial news.
+We hypothesized that strong cohesion in financial news reflects variations in the financial markets.
+Cohesiveness is a better measure of systemic risk expressed in news, than measures based on simple occurrences of specific terms.
+Our results show that cohesiveness in the financial news is highly correlated with variations in the financial markets.
+In this paper, I propose a methodology to study the comovement (correlation on profits on investment) between the entropy (randomness and uncertainty) of different financial markets.
+The entropy is based on the components measuring the stock market in financial markets from selected developed economies (France, Germany, the United Kingdom, and the United States).
+I study how a shock in the entropy in the United States affects the entropy in the other financial markets.
+I also model the entropy using different time variables and obtain a common factor behind the entropy movements in these four markets.
+Mobile devices are very common in everyone’s day-to-day life.
+Nowadays such devices come with many features of computers.
+People can use these devices for diverse applications.
+There are chances that these devices can be used for illegal activities.
+The percentage of mobile phones or smart phones involved in cyber crimes is increasing.
+So it becomes necessary to digitally analyze such devices with cyber forensics tools.
+This paper discusses different types of digital evidence present in Microsoft’s Windows Mobile smart phones and how to acquire such devices.
+Also it describes a forensic tool for acquiring and analyzing Windows Mobile devices and personal digital assistants.
+Internet of Things (IoT) devices (devices connected to the internet, collecting and sharing data) will be used in digital forensic investigations in the future.
+These devices have limited interfaces for communication, such as USB ports or WiFi/Bluetooth wireless interfaces.
+Meanwhile, with an increasing focus on the security and privacy of user data, built-in encryption (which encode information) is becoming commonplace in devices.
+This presents a significant challenge to digital forensic investigations, where data from IoT devices needs to be analysed.
+This work explores the electromagnetic (EM) side-channel analysis literature for the purpose of assisting digital forensic investigations on IoT devices.
+EM side-channel analysis is a technique where electromagnetic emissions are used for eavesdropping on the operations and data handling of devices.
+The non-intrusive nature of EM side-channel approaches makes it a viable option to assist digital forensic investigations as these attacks require no modification to the target device.
+The literature on various EM side-channel analysis attack techniques are discussed – selected according to their applicability in IoT device investigations.
+The data obtained from our survey are used to identify promising future applications of the technique for digital forensic analysis on IoT devices.
+The use of mobile phone forensics to investigate fraudulent activity is nothing new.
+But mobile phones have evolved into smartphones, and fraudsters have evolved with them.
+Smartphones have functionalities that can be used for data theft or inappropriate contact with other parties. They are out of the systems of the company and are not monitored or controlled.
+Employers need to be aware of these risks when devices are delivered and have processes when suspicions are raised.
+Detecting fraudsters with computer skills is a constant game of catch-up.
+It's not only about playing catch-up with the cyberfraudster, but also the technologies that can be misused.
+Moreover, the methods assisting fraudulent activities (still out of reach of company systems) are constantly evolving.
+This means a company's intellectual property and sensitive data is at risk of sabotage or theft.
+Phishers, people who attempt to trick people over the internet to steal their money, continue to modify the web pages used in their attacks to imitate websites of spoofed organizations and to avoid detection by phishing countermeasures.
+Manipulations can be as subtle as changing the source code, which is the programming instructions, or as apparent as adding or removing significant content.
+To respond to these changes to phishing campaigns, algorithms are used to detect phishing websites based on their content, employing a data set consisting of 17,992 phishing attacks targeting 159 different brands.
+The results of the experiments using different approaches demonstrate that some can achieve a detection rate of greater than 90% while maintaining a low false positive rate.
+The period after exercise (1-8h) enhances the body's processes that reverse the effects of the exercise and promotes adaptation to the training.
+Nutritional strategies to optimize muscle recovery include proteins which are recommended to allow protein synthesis (production of new proteins which improve, for example, muscle mass) and carbohydrates to recharge glycogen stores (energy storage).
+Muscle contraction and consumption of leucine-rich protein (essential amino acid composing proteins) induce reactions which increase the protein synthesis.
+Consumption of 20-25 g of high quality protein after exercise and repeated every 4 h showed an optimal anabolic response (increasing muscle mass) of the muscles.
+Several studies showed that athletes are more likely to drink alcohol to excess (50-65% drink above dangerous level).
+Consequences of an excessive consumption after exercise are direct effect on the body but also indirect effect on the recovery due to an inappropriate eating and rest.
+Consumption of carbohydrates can partially counter balance the effects of alcohol on the recharge of glycogen stores but the effect on muscle protein synthesis are unknown.
+The aim of this study was to determine the effect of alcohol on anabolism and protein synthesis in humans during recovery following an effort an athlete could do (in rugby or football for example).
+We assumed that consumption of protein and alcohol (compared to protein only) would reduce protein synthesis.
+Eight healthy physically active men (3 trainings per week for at least 6 months) volunteered for this study.
+Subjects did high intensity exercise and just after consumed an alcohol-carbohydrate, an alcohol-protein or a protein drink in three separate occasions.
+Training consisted of eight sets of five repetitions of leg extension at 80% of their maximum strength.
+After 5 minutes rest, subjects cycled for 30 minutes at medium intensity,
+then 5 minutes at high intensity.
+Immediately following exercise and after 4 h recovery, subjects consumed a 500mL drink of protein or carbohydrates.
+A carbohydrate meal was consumed 2 h after exercise, according to recommendation for glycogen recovery.
+The 8 h period after exercise is an important phase for recovery but also the period during which blood alcohol level may be the highest after excessive consumption of alcohol.
+The alcohol consumption started 1 h after exercise with 6 drinks (60mL of vodka and 240mL of orange juice) and during 3 h.
+For the protein drink, orange juice was consumed with water instead of alcohol.
+Subjects consumed the drinks in 5 minutes every 30 minutes.
+Data (blood, protein synthesis, responses, etc.) were analyzed several times for the 3 different consumptions of drinks.
+The first finding of this study was that the mTOR enzyme (responsible for muscle growth) and protein synthesis (after exercise) were reduced by an excessive alcohol consumption during the 8 h period of recovery.
+Consequences were most evident when alcohol was consumed without protein (37 % reduction of protein synthesis).
+A second finding was that even with protein consumption, alcohol reduced protein synthesis by around 24%.
+mTOR is important in absorption of nutrients (like amino acids) and in sending signals to the body to produce an effort.
+The data from this study show that alcohol reduce the protein synthesis after exercise even with an optimal consumption of nutrients.
+The quantity of alcohol consumed in this study was based on consumption by athletes during binge drinking.
+However, reports show that some individuals can consume higher quantities, which is a concern for health and safety issues.
+Regrettably, it is difficult to find an educational message about alcohol consumption and sport performances that speaks to athletes.
+Considering the importance of protein synthesis (adaptation, repair and regeneration of muscles), the results of this study provide evidence of reduced recovery when alcohol is consumed after exercise, even with an optimal consumption of nutrients.
+We consider our data crucial for athletes and coaches.
+Our findings provide evidence for a message of moderation in alcohol consumption to promote recovery after exercise, with the potential to change sport cultures and athlete practices.
+In this paper we revisit a topic originally discussed in 1955, namely the lack of evidence that muscle growth plays an important role in increasing strength.
+To this day, long-term adaptations in strength are thought to be related to changes in muscle size.
+Given this assumption, training programs made for increasing both muscle size and strength were popular.
+However, the conclusion that a change in muscle size has an influence on strength is surprisingly based on little evidence.
+We suggest that these changes may be based on: (1) the weak correlation between the change in muscle size and the change in muscle strength after training
+Low-intensity occlusion training, which is a training method with blood flow restriction, provides a unique beneficial training mode for muscle growth.
+Training at intensities as low as 20% of maximum strength with moderate occlusion results in muscle growth in 3 weeks.
+A typical exercise consists of 3 to 5 sets to muscle failure with short rest periods.
+The metabolic accumulation causes positive physiologic reactions, specifically a rise in growth hormone, which is one of the main hormone responsible of muscle growth, that is higher than levels found with higher intensities.
+Occlusion training is applicable for those who are unable to sustain high loads due to joint pain, postoperative patients, cardiac rehabilitation, athletes who are unloading, and astronauts.
+Current belief suggests cardio exercise training has minimal effect on muscle size.
+We and others have demonstrated that cardio exercise alters protein metabolism (responsible for protein synthesis and muscle growth) and induces muscle growth.
+These findings against the current belief provide a novel perspective on muscle mass regulation and insight into exercise to prevent muscle loss.
+Stretch training is used in a variety of fitness capacities such as increasing flexibility, preventing contractures (shortening of muscle) and reduce injuries.
+Moreover, some researches indicate that stretch training may induce muscle growth.
+The purpose of this review was to evaluate if stretch training is a viable strategy to induce muscle growth in humans.
+Of the 10 studies identified, 3 observed positive effects of stretch training on muscles.
+In these studies, the stretching was performed with external help like equipment or load.
+Of the 5 available studies that integrated stretching into strength training, 2 applied the stretching in the rest period between the sets and were the ones that showed enhanced muscle growth.
+In conclusion, passive, low-intensity stretch does not appear to produce beneficial changes in muscles but evidence suggests that when stretching is done with a certain intensity (particularly when loaded, or added between active muscle contractions), it may induce muscle growth.
+Cycling training is performed as a major part of any training program which objective is to improve cardiovascular capacities and health.
+However, the effect of cycling training on muscle size and strength still requires a better comprehension.
+Therefore, the purpose of this review is to discuss the effects of cycling training on muscle size and strength of the legs and the possible mechanisms for increasing muscle size with cycling training.
+It is plausible that cycling training requires a longer period to significantly increase muscle size compared to strength training due to a much slower muscle growth rate.
+Cycling training induces muscle growth similarly between young and older people, while strength gain seems to favor older adults.
+For young adults, series of high-intensity cycling may be required to achieve strength gains.
+It also appears that muscle growth induced by cycling training results from the positive changes in protein balance, which is the balance between protein intake which leads to muscle growth and protein loss which leads to muscle loss).
+Strength training is the most effective method to increase muscle mass.
+It has also been shown to promote many health benefits.
+Although it is helpful for treating and preventing diseases, a time-efficient and minimal dose of exercise has been the focus of a great number of research studies.
+Similarly, an inverted U-shaped relationship (which means that the efficiency increases until a point, and then starts decreasing) between training volume and physiological response has been hypothesized to exist.
+However, evidence supports a clear correlation between resistance training volume (number of exercises, sets, etc.) and physiological responses, such as muscle growth and health outcomes.
+Additionally, there is a lack of data to support the inverted U-shaped response.
+The principle suggested is that volume is the most easily modifiable variable that has the most important response, for muscle growth or health outcomes.
+The effects of short versus long rest intervals between sets in strength training on muscle growth have been investigated in several studies but the findings and the practical implications are unclear.
+Current evidence indicates that both short and long rest intervals may be useful for muscle growth.
+Novel findings suggest for trained people a possible advantage for the use of long rest intervals to induce muscle growth.
+However, due to the lack of studies with similar methodologies, further research is needed to provide a clear differentiation between these two approaches.
+Memory is a process in which information is encoded, stored, and retrieved.
+For vertebrates, it has been said that it occurs only in the brain.
+This review describes a cellular memory in muscles in which muscle growth is 'remembered' such that a fibre that has lost its mass, can regain it faster than untrained fibres.
+A new model, with the most reliable methods for identifying myonuclei (nuclei in muscle fiber), can explain this phenomenon.
+According to this model, previously untrained fibres recruit myonuclei from activated satellite cells (quiescent cells acting as a reserve population of cells for regeneration of muscle) before muscle growth.
+Even after grave muscle loss, the higher number of myonuclei is retained, and the myonuclei seem to be protected against programmed cell death observed during muscle loss.
+Fibres that have acquired a higher number of myonuclei grow faster during strength exercise, thus the nuclei represent a functionally important 'memory' of previous strength.
+This memory might be very long lasting in humans, as myonuclei are stable for at least 15 years and might even be permanent.
+However, myonuclei are harder to recruit for old people, and if the long-lasting muscle memory also exists in humans, one should consider early strength training as a public health advice.
+It has been hypothesized that eating small, frequent meals enhances fat loss and helps for better weight maintenance.
+Several studies support this hypothesis, with a link between the frequency of eating and being overweight.
+This review aims to present and discuss a research on meal frequency with respect to changes in body mass.
+Eating frequency was positively associated with reductions in fat mass and increasing in fat-free mass.
+However, the positive findings were the product of a single study, leaving a doubt about the beneficial effect of frequent meals on body composition.
+In conclusion, although the initial results suggest a potential benefit of increased eating frequencies for enhancing body composition, these findings need to be carefully interpreted.
+Per decade, inactive adults experience a muscle loss of 3% to 8%, a reduction of resting metabolic rate (energy consumed by the body at rest) and fat accumulation.
+Ten weeks of strength training may increase fat-free mass by 1.4 kg, resting metabolic rate by 7%, and reduce fat weight by 1.8 kg.
+Benefits of strength training include improved physical performance, movement control, walking speed, functional independence, cognitive abilities, and self-esteem.
+Strength training may assist prevention and management of type 2 diabetes by decreasing abdominal fat, reducing HbA1c which is a form of hemoglobin linked to a sugar, increasing the density of glucose transporter type 4, and improving insulin sensitivity.
+Strength training may enhance cardiovascular health, by reducing resting blood pressure, decreasing 'bad' cholesterol and triglycerides (main constituents of body fat), and increasing 'good' cholesterol.
+Strength training may promote bone development, with studies showing 1% to 3% increase in bone mineral density.
+Strength training may be effective for reducing low back pain, joint and muscle pain, and reverse specific aging factors in muscles.
+Physical activity has many benefits like preventing diseases and improving general health.
+In popular opinion, it is recommended to start intense physical activities like weight lifting and plyometrics (exercises like sprint and jumps) after adolescence.
+But this advice does not seem to be based on facts.
+We did not find any recommendation against strength training at a young age if it is well supervised with safety rules, medical clearance, proper instruction from a professional and progressive overload (gradual increase of stress on muscle and nervous system).
+Several studies showed many benefits of repeated, intense physical efforts in young people.
+Improved motor skills and body composition (muscle mass increased, fat mass decreased, healthier bone) were found in studies, especially if sport practice began during puberty.
+We can conclude that strength training is a safe and healthy practice for children and adolescents.
+Human aging results in a variety of changes to muscles.
+Sarcopenia is the age-associated muscle loss and is one of the main contributors to muscle disorders in older adults.
+Previous research has demonstrated that strength training can attenuate muscle function deficits in older adults, however few articles have focused on the effects of strength training on mobility.
+The purpose of this review was to present the effects of strength training on mobility for older adults with muscle function deficits and to provide guidelines that can be used with seniors during strength training.
+We present evidence that strength training can attenuate age-related changes in mobility, including improvements in walking speed, static and dynamic balance, and fall risk reduction.
+Older adults should be encouraged to participate in strength training activities, and should avoid immobility.
+Maximizing the muscle growth following strength training can be done by manipulating variables like exercise selection, exercise order, rest intervals, intensity of maximal load, and training volume (number of exercises, sets, etc.).
+A neglected variable that also may impact muscle growth is repetition duration.
+Total duration of a repetition is the sum of the contraction, the lengthening and isometric (static contraction) and is based on the tempo.
+We conducted a review and analysis of multiple studies to determine if modification of repetition duration can amplify the muscle growth.
+Results indicate that muscle growth is similar when training with repetition durations from 0.5 to 8 s.
+Using a wide range of repetition durations can be employed if the primary goal is to maximize muscle growth.
+Findings suggest that training at very slow durations (>10s per repetition) is less efficient for muscle growth, although a lack of studies on the topic makes it difficult to draw definitive conclusions.
+Recovery from exercise refers to the time period between the end of exercise and the return to a resting or recovered state.
+It also refers to specific physiological processes occurring after exercise.
+Recovery of the cardiovascular system occurs across a period of minutes to hours, during which many characteristics of the system change over time.
+Some of these changes may be necessary for long-term adaptation to exercise training, yet some can lead to cardiovascular instability during recovery.
+These changes may provide insight into when the cardiovascular system has recovered and is physiologically ready for additional training.
+This review focuses on the most consistently observed blood flow adjustments and the causes that drive cardiovascular recovery and how they differ following strength and cardio exercise.
+First we focus on the effect leading to low blood pressure of cardio and strength exercise and associated mechanisms, which can progress to symptomatic hypotension (low blood pressure) and fainting.
+Finally, we focus on the practical application to maximize the benefits of cardiovascular recovery, or minimize the vulnerabilities.
+We will explore measures, and discuss how these can guide an athlete's training.
+Exercise and physical activity are key tools in the treatment and prevention of several medical conditions including joint disorders and diabetes.
+Exercise can reduce cardiovascular risk, inflammation, illness causing muscle loss, and hypertension, in addition to increasing physical functioning, strength, and cardio-respiratory capacity.
+Chronic kidney disease, a condition that affects around 10% of the population, is often neglected as a target for exercise-based therapy.
+Despite the vast range of severity in kidney disease, exercise has a potential role in all patients suffering from the condition.
+In this review, we summarise the potential important role of exercise in the management of kidney disease and how this form of 'medicine' should be used.
+Exercise with blood flow restriction (BFR) is used to increase strength in healthy individuals.
+However, its effects on individuals with knee pain are unknown.
+The objective is to determine the effectiveness of adding BFR to strength exercise for pain relief and improvement of function in patients with knee pain.
+We conducted a review and analysis of multiple studies.
+Studies that compared strength exercise with or without BFR to treat knee pain and function.
+The results showed that resistance exercises with BFR was not more effective than strength exercises for reducing pain and improving knee function in patients with knee pain.
+In Japan, 43 million patients had high blood pressure in 2010.
+The management of this condition and the importance of lifestyle changes for the prevention and treatment of high blood pressure has been recognized in Japan.
+In particular, increasing the levels of activities of daily living and physical exercise.
+In this review, we examined appropriate exercise prescriptions (e.g., type, intensity, duration per session, and frequency) for the prevention and treatment of high blood pressure.
+This review recommends full body cardio exercise at moderate intensity (i.e., 50-65% of maximum intensity, 30-60 min per session, 3-4 times a week) that focuses on the major muscle groups.
+Strength exercise should be performed at low-intensity without breath-holding and should be used as supplementary exercise, but it is contraindicated in patients with high blood pressure who have chest symptoms such as chest pain.
+Nowadays, people are interested in intermittent fasting (an eating pattern where you cycle between periods of eating and fasting)
+Nutrition is important for the optimization of sport performance so there is a concern about the effects of intermittent fasting on performance.
+Studies showed that there are no benefit in high-intensity, endurance or strength training while fasting.
+Physically active people encounter periods with limited time available for exercise.
+During such periods, the goal of training may be to simply maintain physical performance.
+Some people may also desire to maintain performance for prolonged periods, like athletes during competitive season or militaries during deployment.
+Endurance performance can be maintained for up to 15 weeks with 2 trainings per week, or with a reduction of 13–26 minutes per training, as long as exercise intensity (exercising heart rate) is maintained.
+Strength and muscle size can be maintained for up to 32 weeks with 1 strength training per week and 1 set per exercise, as long as exercise intensity (load) is maintained. In older populations, maintaining muscle size may require up to 2 trainings per week and 2–3 sets per exercise, while maintaining exercise intensity.
+Exercise intensity seems to be the key variable for maintaining physical performance, even with reduction of frequency and volume (number of exercises, sets, etc.)
+Nutrient timing is a popular nutritional strategy that involves the consumption of combinations of nutrients around an exercise session.
+Some people say that this approach can produce dramatic improvements in body composition.
+It has even been hypothesized that the timing may be more important than the total daily intake of nutrients.
+The post-exercise period is considered the most important part of nutrient timing.
+In theory, consuming the proper ratio of nutrients during this time allows the rebuilding of damaged muscle tissue and restoration of energy reserves, but also enhances both body composition and exercise performance.
+Researchers have made reference to an anabolic “window of opportunity” (a limited time after training to optimize muscular adaptations).
+However, the importance - and even the existence - of a post-exercise ‘window’ can vary according to a number of factors.
+Research is uncertain about the applicability of nutrient timing. Besides, the relevance of post-exercise nutritional intake concerning anabolism (increasing muscle mass) has been challenged by recent evidence.
+Lack of time is one of the most common reason for not exercising.
+The aim of this review was to determine how strength training can be time-efficient by evaluating research on training variables, advanced training techniques, and the need for warm-up and stretching.
+We recommend choosing bilateral (with the two arms or legs), multi-joint (multiple joints involved) exercises that include full dynamic movements and to perform a minimum of one leg pressing exercise (e.g. squats), one pulling exercise (e.g. pull-up) and one pushing exercise (e.g. bench press).
+Exercises can be performed with machines and/or free weights.
+Weekly training volume (number of exercises, sets, etc.) is more important than training frequency and we recommend a minimum of 4 weekly sets per muscle group using a load that permits to do 6 to 15 repetitions.
+Advanced training techniques like combining exercises with no rest or shortening the rest time while using lighter weights can cuts the training time in half, while maintaining training volume.
+However, these methods are probably better to increase muscle mass than strength.
+Finally, we advise exercise-specific warm-ups, and stretching only if the goal of training is to increase flexibility.
+Training frequency is an important variable for hypertrophy (increasing muscle mass) in strength training.
+The purpose of this paper was to conduct a review and analysis of multiple studies investigating the effects of weekly training frequency on hypertrophy.
+Results showed no significant difference between higher and lower frequency with the same training volume (number of exercises, sets, etc.).
+Analysis of studies with different training volumes showed better results for higher frequencies, although the difference between frequencies of 1 and 3+ days per week was small.
+In conclusion, there is strong evidence that resistance training frequency does not significantly impact muscle hypertrophy when training volume is the same.
+Thus, for a given training volume, individuals can choose a weekly frequency per muscle groups based on personal preference.
+A variety of training techniques have been suggested to support muscle growth.
+Forced repetitions/drop sets (use lighter weight or receiving help to continue the set), supersets (combining exercises with no rest), and heavy negatives (lowering phase of the lift), are pretended to enhance hypertrophy (increasing muscle mass).
+This article will explore the potential role of these techniques in promoting muscle hypertrophy and provide an insight into possible applications to strength training.
+Increasing muscle mass is the goal of many people who lift weights.
+Research is lacking, however, as to the optimal way to induce muscle growth.
+Bodybuilders train with moderate loads and short rest intervals.
+Powerlifters, on the other hand, train with high-intensity loads and lengthy rest periods.
+Although both groups are known to display impressive muscularity, it is not clear which method is superior for increasing muscle mass.
+It has been shown that many factors mediate the process of muscle growth and that mechanical tension, muscle damage, and metabolic stress all can play a role in muscle growth.
+Therefore, the purpose of this paper is to review the literature as to the mechanisms of muscle hypertrophy and their application to exercise training and to draw conclusions from the research as to the optimal way to induce muscle growth.

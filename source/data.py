@@ -51,19 +51,18 @@ class SimplificationDataModule(LightningDataModule):
 
         if self.stage == "fit":
 
+            logger.info(f"Loading dataset")
+            self.dataset = self.load_data()
+
+            logger.info("Calculating features")
+            self._add_features()
+
             path = self._get_path_from_features()
             if self._exists_preprocessed_dataset(path):
-                preprocessed_train_data = True
-                self.dataset = self.load_data(preprocessed_train_data)
+
                 logger.info(f"Features calculated previously. Loading preprocessed dataset at: {path}")
                 self.dataset["train"] = self._load_preprocessed_dataset(path)
             else:
-                logger.info(f"Loading dataset")
-                self.dataset = self.load_data()
-
-                logger.info("Calculating features")
-                self._add_features()
-
                 logger.info("Storing preprocessed dataset")
                 self._store_preprocessed_dataset()
 
@@ -89,30 +88,33 @@ class SimplificationDataModule(LightningDataModule):
     def test_dataloader(self):
         return DataLoader(self.dataset["test"], batch_size=self.eval_batch_size, num_workers=1)
 
-    def load_data(self, preprocessed_train_data=False):
+    def load_data(self):
         """Loading dataset into Hugging Face DatasetDict. simple validation data can included multiple files."""
 
         if self.stage == "fit":
-            train_original_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".train.complex.txt"),
-                                              sep="\t", header=None, names=["original_text"])
-
-            train_simple_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".train.simple.txt"),
-                                            sep="\t", header=None, names=["simple_text"])
 
             valid_original_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".valid.complex.txt"),
                                               sep="\t", header=None, names=["original_text"])
 
             valid_simple_data = pd.concat([pd.read_csv(item, names=[item.name], sep="\t")
-                              for item in Path(self.data_path).glob("*.valid.simple*")], axis=1)
+                                           for item in Path(self.data_path).glob("*.valid.simple*")], axis=1)
 
-            train_data = pd.concat([train_original_data, train_simple_data], axis=1)
             valid_data = pd.concat([valid_original_data, valid_simple_data], axis=1)
 
-            if preprocessed_train_data:
+            path = self._get_path_from_features()
+            if self._exists_preprocessed_dataset(path):
+
                 dataset_created = datasets.DatasetDict({
                     'valid': datasets.Dataset.from_pandas(valid_data)
                 })
             else:
+                train_original_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".train.complex.txt"),
+                                                  sep="\t", header=None, names=["original_text"])
+
+                train_simple_data = pd.read_csv(Path(self.data_path) / (self.data_path.name + ".train.simple.txt"),
+                                                sep="\t", header=None, names=["simple_text"])
+                train_data = pd.concat([train_original_data, train_simple_data], axis=1)
+
                 dataset_created = datasets.DatasetDict({
                     'train': datasets.Dataset.from_pandas(train_data),
                     'valid': datasets.Dataset.from_pandas(valid_data)
@@ -138,7 +140,6 @@ class SimplificationDataModule(LightningDataModule):
             if not name: name = feature
             string_value += name + "_" + str(target['target_ratio'])
         return string_value
-
 
     def _add_features(self):
         """ Calculating features in selected dataset"""
@@ -175,20 +176,20 @@ class SimplificationDataModule(LightningDataModule):
             )
         if self.stage == "fit":
 
-                columns = ["input_ids", "labels", "attention_mask", "target_mask"]
+            columns = ["input_ids", "labels", "attention_mask", "target_mask"]
 
-                self.dataset["train"].set_format(type="torch", columns=columns, output_all_columns=True)
-                self.dataset["train"] =  self.dataset["train"].map(
-                        self._replace_pad_token_id)
+            self.dataset["train"].set_format(type="torch", columns=columns, output_all_columns=True)
+            self.dataset["train"] = self.dataset["train"].map(
+                self._replace_pad_token_id)
 
-                columns = ["input_ids", "attention_mask"]
+            columns = ["input_ids", "attention_mask"]
 
-                self.dataset["valid"].set_format(type="torch", columns=columns, output_all_columns=True)
+            self.dataset["valid"].set_format(type="torch", columns=columns, output_all_columns=True)
 
         else:
-                columns = ["input_ids", "attention_mask"]
+            columns = ["input_ids", "attention_mask"]
 
-                self.dataset.set_format(type="torch", columns=columns, output_all_columns=True)
+            self.dataset.set_format(type="torch", columns=columns, output_all_columns=True)
 
     def _tokenize_batch(self, batch, split):
 
@@ -243,5 +244,3 @@ class SimplificationDataModule(LightningDataModule):
         preprocessed_name += str(len(self.model_features))
         path = PREPROCESSED_DIR / self.data_path.name / preprocessed_name
         return path
-
-

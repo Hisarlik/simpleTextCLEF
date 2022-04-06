@@ -30,14 +30,14 @@ def evaluate(experiment: Experiment,
 
 if __name__ == "__main__":
     features = dict(
-        WordLengthRatio=dict(target_ratio=0.6),
-        CharLengthRatio=dict(target_ratio=0.5),
+        WordLengthRatio=dict(target_ratio=0.7),
+        CharLengthRatio=dict(target_ratio=0.6),
         LevenshteinRatio=dict(target_ratio=0.8),
-        DependencyTreeDepthRatio=dict(target_ratio=0.8),
-        WordRankRatio=dict(target_ratio=0.8)
+        DependencyTreeDepthRatio=dict(target_ratio=0.7),
+        WordRankRatio=dict(target_ratio=0.9)
     )
 
-    experiment_id = "20220326202929"
+    experiment_id = "20220404092551"
 
     experiment = ExperimentManager.load_experiment(experiment_id)
     evaluate(experiment, SIMPLETEXT_DATASET, features)

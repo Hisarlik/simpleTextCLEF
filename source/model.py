@@ -35,20 +35,6 @@ class LoggingCallback(pl.Callback):
             if key not in ["log", "progress_bar"]:
                 logger.info("{} = {}\n".format(key, str(metrics[key])))
 
-    # def on_test_end(self, trainer, pl_module):
-    #     logger.info("***** Test results *****")
-    #     model_features = trainer.datamodule.get_features_and_values_string()
-    #
-    #     # result path: Experiment + dataset name + features values + test_result
-    #     result_path = Path(pl_module.hparams.get('experiment_path') / \
-    #                        pl_module.hparams.get('dataset_path').name / \
-    #                        model_features / \
-    #                        "test_results.txt")
-    #
-    #     predictions = pl_module.predictions
-    #     if predictions:
-    #         storage.save_file(result_path, predictions)
-
 
 class T5SimplificationModel(pl.LightningModule):
 

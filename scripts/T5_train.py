@@ -28,17 +28,18 @@ def main(model_hyperparameters: Dict,
 
 if __name__ == "__main__":
     features = dict(
-        WordLengthRatio=dict(target_ratio=0.9),
-        CharLengthRatio=dict(target_ratio=0.9),
-        LevenshteinRatio=dict(target_ratio=0.8),
-        DependencyTreeDepthRatio=dict(target_ratio=0.8),
+        WordLengthRatio=dict(target_ratio=0.7),
+        CharLengthRatio=dict(target_ratio=0.7),
+        LevenshteinRatio=dict(target_ratio=0.7),
+        DependencyTreeDepthRatio=dict(target_ratio=0.7),
         WordRankRatio=dict(target_ratio=0.8)
     )
 
+
     config = dict(
         model_name='t5-small',
-        dataset_path=WIKILARGE_CHUNK_DATASET,
-        number_epochs=1,
+        dataset_path=WIKILARGE_DATASET,
+        number_epochs=2,
         max_seq_length=256,
         learning_rate=3e-4,
         weight_decay=0.1,
