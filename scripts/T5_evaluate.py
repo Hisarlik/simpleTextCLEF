@@ -8,25 +8,10 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 from typing import Dict
 from pathlib import Path
 
-from source.optimization import Experiment
+from source.experiments import Experiment
 from conf import WIKILARGE_CHUNK_DATASET, TURKCORPUS_DATASET, WIKILARGE_DATASET, SIMPLETEXT_DATASET
-from source.optimization import ExperimentManager
-
-
-
-
-def evaluate(experiment: Experiment,
-             dataset: Path,
-             features: Dict):
-
-    dm = experiment.create_and_setup_data_module(dataset, features, "test")
-    trainer = experiment.create_trainer()
-    model = experiment.load_best_model()
-    trainer.test(model, datamodule=dm)
-    experiment.get_metrics(model, dm)
-
-
-
+from source.experiments import ExperimentManager
+from source.evaluation import evaluate
 
 if __name__ == "__main__":
     features = dict(

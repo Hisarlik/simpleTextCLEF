@@ -4,7 +4,7 @@ import sys
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 # -- end fix path --
 from typing import Dict
-from source.optimization import ExperimentManager
+from source.experiments import ExperimentManager
 from conf import WIKILARGE_DATASET, WIKILARGE_CHUNK_DATASET, DEVICE
 
 
@@ -72,7 +72,7 @@ if __name__ == "__main__":
     config = dict(
         model_name='t5-small',
         dataset_path=WIKILARGE_CHUNK_DATASET,
-        number_epochs=2,
+        number_epochs=1,
         max_seq_length=256,
         learning_rate=3e-4,
         weight_decay=0.1,
@@ -94,3 +94,4 @@ if __name__ == "__main__":
     )
     for features in list_features:
         main(config, features)
+        break

@@ -133,6 +133,8 @@ class Experiment:
             storage.save_text_file(result_text_path, predictions)
             storage.save_text_file(result_metrics_path, result_score)
 
+        return score
+
 class ExperimentManager:
 
     @staticmethod

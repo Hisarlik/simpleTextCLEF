@@ -18,6 +18,7 @@ easse@git+git://github.com/feralvam/easse.git@8f62a807cce1c73771ad2c6c28a1c72e92
 sacrebleu==1.5.1
 seaborn
 gensim
+optuna
 
 
 
