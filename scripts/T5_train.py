@@ -27,52 +27,20 @@ def main(model_hyperparameters: Dict,
 
 
 if __name__ == "__main__":
-    list_features = []
-    list_features.append(dict(
-        WordLengthRatio=dict(target_ratio=1),
-        CharLengthRatio=dict(target_ratio=1),
-        LevenshteinRatio=dict(target_ratio=1),
-        DependencyTreeDepthRatio=dict(target_ratio=1),
-        WordRankRatio=dict(target_ratio=1)
-    ))
 
-    list_features.append(dict(
-        WordLengthRatio=dict(target_ratio=0.5),
-        CharLengthRatio=dict(target_ratio=0.5),
-        LevenshteinRatio=dict(target_ratio=0.5),
-        DependencyTreeDepthRatio=dict(target_ratio=0.5),
-        WordRankRatio=dict(target_ratio=0.5)
-    ))
-
-    list_features.append(dict(
-        WordLengthRatio=dict(target_ratio=0.6),
+    features = dict(
+        WordLengthRatio=dict(target_ratio=0.7),
         CharLengthRatio=dict(target_ratio=0.6),
         LevenshteinRatio=dict(target_ratio=0.6),
-        DependencyTreeDepthRatio=dict(target_ratio=0.6),
-        WordRankRatio=dict(target_ratio=0.6)
-    ))
-
-    list_features.append(dict(
-        WordLengthRatio=dict(target_ratio=0.7),
-        CharLengthRatio=dict(target_ratio=0.7),
-        LevenshteinRatio=dict(target_ratio=0.7),
-        DependencyTreeDepthRatio=dict(target_ratio=0.7),
-        WordRankRatio=dict(target_ratio=0.7)
-    ))
-
-    list_features.append(dict(
-        WordLengthRatio=dict(target_ratio=0.8),
-        CharLengthRatio=dict(target_ratio=0.8),
-        LevenshteinRatio=dict(target_ratio=0.8),
-        DependencyTreeDepthRatio=dict(target_ratio=0.8),
-        WordRankRatio=dict(target_ratio=0.8)
-    ))
+        DependencyTreeDepthRatio=dict(target_ratio=0.9),
+        WordRankRatio=dict(target_ratio=0.9)
+    )
 
 
     config = dict(
         model_name='t5-small',
-        dataset_path=WIKILARGE_CHUNK_DATASET,
-        number_epochs=1,
+        dataset_path=WIKILARGE_DATASET,
+        number_epochs=5,
         max_seq_length=256,
         learning_rate=3e-4,
         weight_decay=0.1,
@@ -92,6 +60,6 @@ if __name__ == "__main__":
         valid_sample_size=1,
         device=DEVICE
     )
-    for features in list_features:
-        main(config, features)
-        break
+
+    main(config, features)
+

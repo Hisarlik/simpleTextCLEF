@@ -15,14 +15,14 @@ from source.evaluation import evaluate
 
 if __name__ == "__main__":
     features = dict(
-        WordLengthRatio=dict(target_ratio=0.7),
-        CharLengthRatio=dict(target_ratio=0.6),
-        LevenshteinRatio=dict(target_ratio=0.8),
-        DependencyTreeDepthRatio=dict(target_ratio=0.7),
-        WordRankRatio=dict(target_ratio=0.6)
+        WordLengthRatio=dict(target_ratio=0.75),
+        CharLengthRatio=dict(target_ratio=0.65),
+        LevenshteinRatio=dict(target_ratio=0.5),
+        DependencyTreeDepthRatio=dict(target_ratio=1.4),
+        WordRankRatio=dict(target_ratio=1.15)
     )
 
     experiment_id = None
 
     experiment = ExperimentManager.load_experiment(experiment_id)
-    evaluate(experiment, WIKILARGE_CHUNK_DATASET, features)
+    evaluate(experiment, SIMPLETEXT_DATASET, features)

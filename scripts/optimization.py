@@ -1,23 +1,17 @@
 # -- fix path --
 from pathlib import Path
 import sys
-
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 # -- end fix path --
 
-from typing import Dict
-from pathlib import Path
-
-from source.experiments import Experiment
-from conf import WIKILARGE_CHUNK_DATASET, TURKCORPUS_DATASET, WIKILARGE_DATASET, SIMPLETEXT_DATASET
-from source.experiments import ExperimentManager
+from source.utils import logging_module
 
 import optuna
-
-from conf import WIKILARGE_CHUNK_DATASET
+from conf import WIKILARGE_CHUNK_DATASET, TURKCORPUS_DATASET, WIKILARGE_DATASET, SIMPLETEXT_DATASET
 from source.experiments import ExperimentManager
 from source.evaluation import evaluate
 
+logger = logging_module.get_logger(__name__)
 
 dict(
         WordLengthRatio=dict(target_ratio=1),
@@ -27,7 +21,7 @@ dict(
         WordRankRatio=dict(target_ratio=1))
 
 
-def objective(trial: optuna.trial.Trial) -> float:
+def objective(trial: optuna.trial.Trial, experiment_id, dataset) -> float:
 
 
 
@@ -41,23 +35,28 @@ def objective(trial: optuna.trial.Trial) -> float:
     experiment_id = None
 
     experiment = ExperimentManager.load_experiment(experiment_id)
-    result = evaluate(experiment, WIKILARGE_CHUNK_DATASET, features)
+    result = evaluate(experiment, dataset, features)
     return result
 
 
 if __name__ == '__main__':
 
-    study_path = "test"
-    study = optuna.create_study(study_name='Tokens_study', direction="maximize")
-    study.optimize(objective, n_trials=10)
+    expe_id = "20220404092551"
+    dataset = SIMPLETEXT_DATASET
+    trials = 500
 
-    print("Number of finished trials: {}".format(len(study.trials)))
+    # Wrap the objective inside a lambda and call objective inside it
+    func = lambda trial: objective(trial, expe_id, dataset)
+    study = optuna.create_study(study_name='Tokens_study', direction="maximize")
+    study.optimize(func, n_trials=500)
+
+    logger.info("Number of finished trials: {}".format(len(study.trials)))
 
     print("Best trial:")
     trial = study.best_trial
 
-    print("  Value: {}".format(trial.value))
+    logger.info("  Value: {}".format(trial.value))
 
-    print("  Params: ")
+    logger.info("  Params: ")
     for key, value in trial.params.items():
-        print("    {}: {}".format(key, value))
+        logger.info("    {}: {}".format(key, value))
