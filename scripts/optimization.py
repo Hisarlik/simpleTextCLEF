@@ -5,59 +5,47 @@ import sys
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 # -- end fix path --
 
-from typing import Dict
-from pathlib import Path
-
-from source.experiments import Experiment
-from conf import WIKILARGE_CHUNK_DATASET, TURKCORPUS_DATASET, WIKILARGE_DATASET, SIMPLETEXT_DATASET
-from source.experiments import ExperimentManager
+from source.utils import logging_module
 
 import optuna
-
-from conf import WIKILARGE_CHUNK_DATASET
+from conf import WIKILARGE_CHUNK_DATASET, TURKCORPUS_DATASET, WIKILARGE_DATASET, SIMPLETEXT_DATASET
 from source.experiments import ExperimentManager
 from source.evaluation import evaluate
 
-
-dict(
-        WordLengthRatio=dict(target_ratio=1),
-        CharLengthRatio=dict(target_ratio=1),
-        LevenshteinRatio=dict(target_ratio=1),
-        DependencyTreeDepthRatio=dict(target_ratio=1),
-        WordRankRatio=dict(target_ratio=1))
+logger = logging_module.get_logger(__name__)
 
 
-def objective(trial: optuna.trial.Trial) -> float:
-
-
-
+def objective(trial: optuna.trial.Trial, experiment_id, dataset) -> float:
     features = dict(
-            WordLengthRatio=dict(target_ratio=trial.suggest_float('WordRatio', 0.20, 1.5, step=0.05)),
-            CharLengthRatio=dict(target_ratio=trial.suggest_float('CharRatio', 0.20, 1.5, step=0.05)),
-            LevenshteinRatio=dict(target_ratio=trial.suggest_float('LevenshteinRatio', 0.20, 1.5, step=0.05)),
-            DependencyTreeDepthRatio=dict(target_ratio=trial.suggest_float('DepthTreeRatio', 0.20, 1.5, step=0.05)),
-            WordRankRatio=dict(target_ratio=trial.suggest_float('WordRankRatio', 0.20, 1.5, step=0.05)))
-
-    experiment_id = None
+        WordLengthRatio=dict(target_ratio=trial.suggest_float('WordRatio', 0.6, 0.8, step=0.05)),
+        CharLengthRatio=dict(target_ratio=trial.suggest_float('CharRatio', 0.6, 0.8, step=0.05)),
+        LevenshteinRatio=dict(target_ratio=trial.suggest_float('LevenshteinRatio', 0.5, 0.7, step=0.05)),
+        DependencyTreeDepthRatio=dict(target_ratio=trial.suggest_float('DepthTreeRatio', 0.6, 0.95, step=0.05)),
+        WordRankRatio=dict(target_ratio=trial.suggest_float('WordRankRatio', 0.3, 0.9, step=0.05)))
 
     experiment = ExperimentManager.load_experiment(experiment_id)
-    result = evaluate(experiment, WIKILARGE_CHUNK_DATASET, features)
+    result = evaluate(experiment, dataset, features)
     return result
 
 
 if __name__ == '__main__':
 
-    study_path = "test"
-    study = optuna.create_study(study_name='Tokens_study', direction="maximize")
-    study.optimize(objective, n_trials=10)
+    expe_id = None
+    dataset = SIMPLETEXT_DATASET
+    trials = 500
 
-    print("Number of finished trials: {}".format(len(study.trials)))
+    # Wrap the objective inside a lambda and call objective inside it
+    func = lambda trial: objective(trial, expe_id, dataset)
+    study = optuna.create_study(study_name='Tokens_study', direction="maximize")
+    study.optimize(func, n_trials=trials)
+
+    logger.info("Number of finished trials: {}".format(len(study.trials)))
 
     print("Best trial:")
     trial = study.best_trial
 
-    print("  Value: {}".format(trial.value))
+    logger.info("  Value: {}".format(trial.value))
 
-    print("  Params: ")
+    logger.info("  Params: ")
     for key, value in trial.params.items():
-        print("    {}: {}".format(key, value))
+        logger.info("    {}: {}".format(key, value))

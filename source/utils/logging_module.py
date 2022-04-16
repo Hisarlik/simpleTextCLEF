@@ -11,7 +11,7 @@ def get_logger(name: str) -> logging.Logger:
         logging.Logger: [description]
     """
     logger = logging.getLogger(name)
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
 
     # create console handler and set level to debug
     ch = logging.StreamHandler()
@@ -19,7 +19,7 @@ def get_logger(name: str) -> logging.Logger:
 
     # create file handler for logger.
     fh = logging.FileHandler('SPOT.log')
-    fh.setLevel(level=logging.DEBUG)
+    fh.setLevel(level=logging.INFO)
 
 
     # create formatter
