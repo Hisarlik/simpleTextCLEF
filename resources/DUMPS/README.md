@@ -1,0 +1,1 @@
+Path to store word embeddings files and other resources.
