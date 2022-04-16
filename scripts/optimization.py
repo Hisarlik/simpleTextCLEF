@@ -1,6 +1,7 @@
 # -- fix path --
 from pathlib import Path
 import sys
+
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 # -- end fix path --
 
@@ -13,26 +14,14 @@ from source.evaluation import evaluate
 
 logger = logging_module.get_logger(__name__)
 
-dict(
-        WordLengthRatio=dict(target_ratio=1),
-        CharLengthRatio=dict(target_ratio=1),
-        LevenshteinRatio=dict(target_ratio=1),
-        DependencyTreeDepthRatio=dict(target_ratio=1),
-        WordRankRatio=dict(target_ratio=1))
-
 
 def objective(trial: optuna.trial.Trial, experiment_id, dataset) -> float:
-
-
-
     features = dict(
-            WordLengthRatio=dict(target_ratio=trial.suggest_float('WordRatio', 0.40, 1.5, step=0.05)),
-            CharLengthRatio=dict(target_ratio=trial.suggest_float('CharRatio', 0.40, 1.5, step=0.05)),
-            LevenshteinRatio=dict(target_ratio=trial.suggest_float('LevenshteinRatio', 0.40, 1.5, step=0.05)),
-            DependencyTreeDepthRatio=dict(target_ratio=trial.suggest_float('DepthTreeRatio', 0.40, 1.5, step=0.05)),
-            WordRankRatio=dict(target_ratio=trial.suggest_float('WordRankRatio', 0.40, 1.5, step=0.05)))
-
-    experiment_id = None
+        WordLengthRatio=dict(target_ratio=trial.suggest_float('WordRatio', 0.6, 0.8, step=0.05)),
+        CharLengthRatio=dict(target_ratio=trial.suggest_float('CharRatio', 0.6, 0.8, step=0.05)),
+        LevenshteinRatio=dict(target_ratio=trial.suggest_float('LevenshteinRatio', 0.5, 0.7, step=0.05)),
+        DependencyTreeDepthRatio=dict(target_ratio=trial.suggest_float('DepthTreeRatio', 0.6, 0.95, step=0.05)),
+        WordRankRatio=dict(target_ratio=trial.suggest_float('WordRankRatio', 0.3, 0.9, step=0.05)))
 
     experiment = ExperimentManager.load_experiment(experiment_id)
     result = evaluate(experiment, dataset, features)
@@ -41,7 +30,7 @@ def objective(trial: optuna.trial.Trial, experiment_id, dataset) -> float:
 
 if __name__ == '__main__':
 
-    expe_id = "20220413100757"
+    expe_id = None
     dataset = SIMPLETEXT_DATASET
     trials = 500
 
