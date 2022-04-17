@@ -17,9 +17,9 @@ if __name__ == "__main__":
     features = dict(
         WordLengthRatio=dict(target_ratio=0.75),
         CharLengthRatio=dict(target_ratio=0.65),
-        LevenshteinRatio=dict(target_ratio=0.5),
-        DependencyTreeDepthRatio=dict(target_ratio=1.4),
-        WordRankRatio=dict(target_ratio=1.15)
+        LevenshteinRatio=dict(target_ratio=0.8),
+        DependencyTreeDepthRatio=dict(target_ratio=0.7),
+        WordRankRatio=dict(target_ratio=0.9)
     )
 
     experiment_id = None
