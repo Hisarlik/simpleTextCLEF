@@ -1,6 +1,7 @@
 # -- fix path --
 from pathlib import Path
 import sys
+from typing import Union
 
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 # -- end fix path --
@@ -15,7 +16,7 @@ from source.evaluation import evaluate
 logger = logging_module.get_logger(__name__)
 
 
-def objective(trial: optuna.trial.Trial, experiment_id, dataset) -> float:
+def objective(trial: optuna.trial.Trial, experiment_id:Union[str, None], dataset: Path) -> float:
     features = dict(
         WordLengthRatio=dict(target_ratio=trial.suggest_float('WordRatio', 0.6, 0.8, step=0.05)),
         CharLengthRatio=dict(target_ratio=trial.suggest_float('CharRatio', 0.6, 0.8, step=0.05)),
