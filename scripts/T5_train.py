@@ -33,7 +33,8 @@ if __name__ == "__main__":
         CharLengthRatio=dict(target_ratio=0.6),
         LevenshteinRatio=dict(target_ratio=0.6),
         DependencyTreeDepthRatio=dict(target_ratio=0.9),
-        WordRankRatio=dict(target_ratio=0.9)
+        #WordRankRatio=dict(target_ratio=0.9),
+        LMFillMaskRatio=dict(target_ratio=0.9)
     )
 
 

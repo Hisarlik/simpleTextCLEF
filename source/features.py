@@ -13,9 +13,14 @@ from tqdm import tqdm
 from pathlib import Path
 import numpy as np
 from string import punctuation
+import transformers
+import torch
 
 nltk.download('stopwords', quiet=True)
+nltk.download('averaged_perceptron_tagger', quiet=True)
 from nltk.corpus import stopwords
+from nltk import pos_tag
+import nltk
 from conf import DUMPS_DIR, WORD_EMBEDDINGS_NAME
 
 stopwords = set(stopwords.words("english"))
@@ -265,3 +270,52 @@ class WordRankRatio(Feature):
 
         return inner
 
+
+class LMFillMaskRatio(Feature):
+
+    def __init__(self, stage, target_ratio):
+        super().__init__(stage, target_ratio)
+        if stage == "train":
+            self.model = transformers.AutoModelWithLMHead.from_pretrained('lordtt13/COVID-SciBERT')
+            self.tokenizer = transformers.AutoTokenizer.from_pretrained('lordtt13/COVID-SciBERT')
+
+    def calculate_ratio(self, simple_text, original_text):
+        complex_feature = self.mask_sentence_prediction(original_text)
+        simple_feature = self.mask_sentence_prediction(simple_text)
+        # print(f"Complex feature: {complex_feature}. Simple feature: {simple_feature}")
+        if complex_feature != 0:
+            value = simple_feature / complex_feature
+        else:
+            value = 1
+        return min(value, 2)
+
+    def mask_sentence_prediction(self, text, topk=50):
+        # print("----------------------")
+        sentence_tokens = [token[0] for token in self.tokenizer.backend_tokenizer.pre_tokenizer.pre_tokenize_str(text)]
+        pos_tagging_sentence = pos_tag(sentence_tokens)
+        # print(pos_tag(sentence_tokens))
+        # print(len(pos_tagging_sentence))
+        predictions = []
+        for i, (word, pos) in enumerate(pos_tagging_sentence):
+
+            # print(f"i:{i}, word:{word}, pos:{pos}")
+            if pos in ['NNS', 'NN', 'VBP', 'VBG', 'VBD']:
+                sentence_masked = sentence_tokens.copy()
+                sentence_masked[i] = "[MASK]"
+                sentence_final = " ".join(sentence_masked)
+                # print(sentence_final)
+                inputs = self.tokenizer(sentence_final, return_tensors="pt")
+                token_logits = self.model(**inputs).logits
+                mask_token_index = torch.where(inputs.input_ids == self.tokenizer.mask_token_id)[1]
+                mask_token_logits = token_logits[0, mask_token_index, :]
+                top_n_tokens = torch.topk(mask_token_logits, topk, dim=1).indices[0].tolist()
+                predicted_tokens = [self.tokenizer.decode([token]) for token in top_n_tokens]
+                if word in predicted_tokens:
+                    predictions.append(predicted_tokens.index(word))
+
+        predictions = [np.log(pred + 1) for pred in predictions]
+        if len(predictions) == 0:
+            return np.log(1 + topk*50)
+
+        value = np.quantile(predictions, 0.75)
+        return value
