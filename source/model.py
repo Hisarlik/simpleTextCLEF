@@ -87,7 +87,7 @@ class T5SimplificationModel(pl.LightningModule):
 
     def validation_step(self, batch, batch_idx):
         loss = self.sari_validation_step(batch)
-        logger.info(f"valid_loss: {loss}")
+        logger.debug(f"valid_loss: {loss}")
         self.log('val_loss', loss, batch_size=batch['input_ids'].size(dim=0))
         return torch.tensor(loss, dtype=float)
 

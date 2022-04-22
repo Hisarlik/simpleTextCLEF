@@ -4,7 +4,7 @@ import sys
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 # -- end fix path --
 from typing import Dict
-from source.optimization import ExperimentManager
+from source.experiments import ExperimentManager
 from conf import WIKILARGE_DATASET, WIKILARGE_CHUNK_DATASET, DEVICE
 
 
@@ -27,19 +27,21 @@ def main(model_hyperparameters: Dict,
 
 
 if __name__ == "__main__":
+
     features = dict(
-        WordLengthRatio=dict(target_ratio=0.7),
-        CharLengthRatio=dict(target_ratio=0.7),
-        LevenshteinRatio=dict(target_ratio=0.7),
-        DependencyTreeDepthRatio=dict(target_ratio=0.7),
-        WordRankRatio=dict(target_ratio=0.8)
+        WordLengthRatio=dict(target_ratio=0.75),
+        CharLengthRatio=dict(target_ratio=0.6),
+        LevenshteinRatio=dict(target_ratio=0.6),
+        DependencyTreeDepthRatio=dict(target_ratio=0.95),
+        #WordRankRatio=dict(target_ratio=0.9),
+        LMFillMaskRatio=dict(target_ratio=0.75)
     )
 
 
     config = dict(
         model_name='t5-small',
         dataset_path=WIKILARGE_DATASET,
-        number_epochs=2,
+        number_epochs=5,
         max_seq_length=256,
         learning_rate=3e-4,
         weight_decay=0.1,
@@ -61,3 +63,4 @@ if __name__ == "__main__":
     )
 
     main(config, features)
+

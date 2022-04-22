@@ -104,6 +104,14 @@ class Experiment:
         dataset_path = dm.data_path
         predictions = model.predictions
 
+        result_text_path = Path(self.experiment_path / \
+                                dataset_path.name / \
+                                model_features / \
+                                "test_results.txt")
+
+        if predictions:
+            storage.save_text_file(result_text_path, predictions)
+
         original_sents = []
         simple_sents = []
 
@@ -132,6 +140,8 @@ class Experiment:
         if predictions:
             storage.save_text_file(result_text_path, predictions)
             storage.save_text_file(result_metrics_path, result_score)
+
+        return score
 
 class ExperimentManager:
 
