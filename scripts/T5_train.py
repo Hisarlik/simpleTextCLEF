@@ -29,12 +29,12 @@ def main(model_hyperparameters: Dict,
 if __name__ == "__main__":
 
     features = dict(
-        WordLengthRatio=dict(target_ratio=0.7),
+        WordLengthRatio=dict(target_ratio=0.75),
         CharLengthRatio=dict(target_ratio=0.6),
         LevenshteinRatio=dict(target_ratio=0.6),
-        DependencyTreeDepthRatio=dict(target_ratio=0.9),
+        DependencyTreeDepthRatio=dict(target_ratio=0.95),
         #WordRankRatio=dict(target_ratio=0.9),
-        LMFillMaskRatio=dict(target_ratio=0.9)
+        LMFillMaskRatio=dict(target_ratio=0.75)
     )
 
 
