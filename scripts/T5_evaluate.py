@@ -5,10 +5,6 @@ import sys
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 # -- end fix path --
 
-from typing import Dict
-from pathlib import Path
-
-from source.experiments import Experiment
 from conf import WIKILARGE_CHUNK_DATASET, TURKCORPUS_DATASET, WIKILARGE_DATASET, SIMPLETEXT_DATASET
 from source.experiments import ExperimentManager
 from source.evaluation import evaluate
@@ -21,8 +17,9 @@ if __name__ == "__main__":
         DependencyTreeDepthRatio=dict(target_ratio=0.95),
         LMFillMaskRatio=dict(target_ratio=0.75)
     )
-
+    #Select experiment_id value or put None to evaluate last trained model.
     experiment_id = None
+    dataset = SIMPLETEXT_DATASET
 
     experiment = ExperimentManager.load_experiment(experiment_id)
-    evaluate(experiment, SIMPLETEXT_DATASET, features)
+    evaluate(experiment, dataset, features)
