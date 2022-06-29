@@ -32,11 +32,13 @@ def objective(trial: optuna.trial.Trial, experiment_id:Union[str, None], dataset
 
 if __name__ == '__main__':
 
-    expe_id = "20220421000528"
+    # Change experiment_id value or None to evaluate last trained model.
+    # Select dataset for finetuning it.
+    expe_id = None
     dataset = SIMPLETEXT_DATASET
-    trials = 200
+    trials = 500
 
-    # Wrap the objective inside a lambda and call objective inside it
+
     func = lambda trial: objective(trial, expe_id, dataset)
     study = optuna.create_study(study_name='Tokens_study', direction="maximize")
     study.optimize(func, n_trials=trials)
