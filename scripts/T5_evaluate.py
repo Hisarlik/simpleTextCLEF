@@ -19,11 +19,10 @@ if __name__ == "__main__":
         CharLengthRatio=dict(target_ratio=0.6),
         LevenshteinRatio=dict(target_ratio=0.6),
         DependencyTreeDepthRatio=dict(target_ratio=0.95),
-        #WordRankRatio=dict(target_ratio=0.65)
         LMFillMaskRatio=dict(target_ratio=0.75)
     )
 
-    experiment_id = "20220421000528"
+    experiment_id = None
 
     experiment = ExperimentManager.load_experiment(experiment_id)
     evaluate(experiment, SIMPLETEXT_DATASET, features)

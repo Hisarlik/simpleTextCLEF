@@ -33,7 +33,6 @@ if __name__ == "__main__":
         CharLengthRatio=dict(target_ratio=0.6),
         LevenshteinRatio=dict(target_ratio=0.6),
         DependencyTreeDepthRatio=dict(target_ratio=0.95),
-        #WordRankRatio=dict(target_ratio=0.9),
         LMFillMaskRatio=dict(target_ratio=0.75)
     )
 
@@ -50,7 +49,7 @@ if __name__ == "__main__":
         train_batch_size=6,
         valid_batch_size=6,
         custom_loss=False,
-        gradient_accumulation_steps=1,  # 16
+        gradient_accumulation_steps=1,
         accelerator="gpu",
         fp_16=False,
         opt_level='O1',
@@ -59,7 +58,7 @@ if __name__ == "__main__":
         nb_sanity_val_steps=0,
         train_sample_size=1,
         valid_sample_size=1,
-        device=DEVICE
+        device=DEVICE                   # "cuda" or "cpu"
     )
 
     main(config, features)
