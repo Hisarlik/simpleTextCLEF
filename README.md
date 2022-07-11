@@ -33,4 +33,4 @@ Same for larger version. Be carefull with memory issues.
 
 # Data
 
-Download the dataset from https://simpletext-project.com/2022/clef/en/tasks.
+Download the dataset from https://simpletext-project.com/2022/clef/en/tasks. It's necessary to preprocessed the raw data using 1.Preprocessing dataset Task 3.ipynb.
