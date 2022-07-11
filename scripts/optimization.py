@@ -9,7 +9,7 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 from source.utils import logging_module
 
 import optuna
-from conf import WIKILARGE_CHUNK_DATASET, TURKCORPUS_DATASET, WIKILARGE_DATASET, SIMPLETEXT_DATASET
+from conf import WIKILARGE_CHUNK_DATASET, TURKCORPUS_DATASET, WIKILARGE_DATASET, SIMPLETEXT_TEST
 from source.experiments import ExperimentManager
 from source.evaluation import evaluate
 
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     # Change experiment_id value or None to evaluate last trained model.
     # Select dataset for finetuning it.
     expe_id = None
-    dataset = SIMPLETEXT_DATASET
+    dataset = SIMPLETEXT_TEST
     trials = 500
 
 

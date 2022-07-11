@@ -39,8 +39,8 @@ if __name__ == "__main__":
 
     config = dict(
         model_name='t5-small',
-        dataset_path=WIKILARGE_DATASET,
-        number_epochs=5,
+        dataset_path=WIKILARGE_CHUNK_DATASET,
+        number_epochs=1,
         max_seq_length=256,
         learning_rate=3e-4,
         weight_decay=0.1,
