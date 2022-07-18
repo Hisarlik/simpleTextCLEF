@@ -8,18 +8,13 @@ torchvision==0.11.3+cu113
 torchaudio===0.10.2+cu113
 -f https://download.pytorch.org/whl/torch_stable.html
 farm-haystack
-transformers
+transformers[sentencepiece]
 pytorch_lightning
 python_Levenshtein==0.12.0
 spacy
 pandas
-sentencepiece
-easse@git+git://github.com/feralvam/easse.git@8f62a807cce1c73771ad2c6c28a1c72e927d581a
-sacrebleu==1.5.1
 seaborn
 gensim
 optuna
-
-
-
+git+https://github.com/feralvam/easse.git
 
