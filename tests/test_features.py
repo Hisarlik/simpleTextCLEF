@@ -13,7 +13,7 @@ from source.features import ControlDivisionByZero, \
 class TestWordLengthRatioFeature(unittest.TestCase):
 
     def setUp(self):
-        self.feature_model = WordLengthRatio("fit", 0.8)
+        self.feature_model = WordLengthRatio("train", 0.8)
         self.tokenizer = MosesTokenizer(lang='en')
         self.original_text = "For example , King Bhumibol was born on Monday , " \
                              "so on his birthday throughout Thailand will be decorated with yellow color ."
@@ -61,7 +61,7 @@ class TestDependencyTreeDepthRatio(unittest.TestCase):
 
     def setUp(self):
 
-        self.feature_model = DependencyTreeDepthRatio("fit", 0.8)
+        self.feature_model = DependencyTreeDepthRatio("train", 0.8)
         self.simple_text = "All over Thailand the color yellow will be used to celebrate King Bhumibal."
 
     def test_dependency_tree_depth_ratio(self):
@@ -72,7 +72,7 @@ class TestDependencyTreeDepthRatio(unittest.TestCase):
 class TestWordRankRatio(unittest.TestCase):
 
     def setUp(self):
-        self.feature_model = WordRankRatio("fit", 0.8)
+        self.feature_model = WordRankRatio("train", 0.8)
         self.simple_text = "All over Thailand the color yellow will be used to celebrate King Bhumibal."
 
     def test_get_lexical_complexity_score(self):
