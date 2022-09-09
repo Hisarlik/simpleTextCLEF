@@ -89,7 +89,7 @@ class Experiment:
         trainer_conf = dict(
             accelerator=self.hparams.get("accelerator", "gpu"),
             accumulate_grad_batches=1,
-            gpus=torch.cuda.device_count(),
+            devices=1,
             max_epochs=self.hparams.get("number_epochs", 1),
             precision=16 if self.hparams.get("fp_16") else 32,
             callbacks=[LoggingCallback(), checkpoint_callback, LitProgressBar()],
